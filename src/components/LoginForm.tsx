@@ -28,9 +28,9 @@ export function LoginForm({
                 </p>
               </div>
               <Field>
-                <FieldLabel htmlFor="email">Login</FieldLabel>
+                <FieldLabel htmlFor="login">Login</FieldLabel>
                 <Input
-                  id="email"
+                  id="login"
                   type="text"
                   placeholder=""
                   maxLength={14}

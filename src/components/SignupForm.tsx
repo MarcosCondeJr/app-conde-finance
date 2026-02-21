@@ -6,7 +6,6 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Link } from "react-router-dom"
@@ -20,6 +19,11 @@ export function SignupForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
+          <div className="bg-primary flex items-center justify-center p-6 text-primary-foreground">
+              <div className="text-xl font-semibold">
+                  Conde Finance
+              </div>
+          </div>
           <form className="p-6 md:p-8">
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
@@ -79,11 +83,6 @@ export function SignupForm({
               </FieldDescription>
             </FieldGroup>
           </form>
-          <div className="bg-primary flex items-center justify-center p-6 text-primary-foreground">
-            <div className="text-xl font-semibold">
-                Conde Finance
-            </div>
-        </div>
         </CardContent>
       </Card>
       {/* <FieldDescription className="px-6 text-center">
