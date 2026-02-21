@@ -21,7 +21,7 @@ export function Layout({children}: any) {
         <div className="min-h-screen min-w-screen">
             <aside className="fixed left-0 top-0 h-screen w-64 border-r">
                 <div className="flex h-16 items-center justify-center border-b px-6">
-                    <h2 className="text-sm font-bold">Conde Finance</h2>
+                    <h2 className="text-xl font-bold text-primary">Conde Finance</h2>
                 </div>
                 <nav className="space-y-1 flex flex-col gap-1 p-4">
                         {navItems.map((item) => {
@@ -46,9 +46,12 @@ export function Layout({children}: any) {
 
                         })}
                 </nav>
+                <div>
+                    <div></div>
+                </div>
             </aside>
 
-            <div className="ml-64">
+            <div className="ml-64 fix">
                 <header className="flex h-16 items-center justify-between border-b px-8">
                     <div className="text-lg font-semibold">
                         {navItems.find((item) => item.path === location.pathname)?.label || "Dashboard"}
