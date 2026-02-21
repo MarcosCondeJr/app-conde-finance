@@ -9,6 +9,7 @@ import Banks from "../pages/Banks";
 import Accounts from "../pages/Accounts";
 import Categories from "../pages/Categories";
 import Transactions from "../pages/Transactions";
+import Signup from "@/pages/Signup";
 
 export const router = createBrowserRouter([
     { path: "/", element: <Navigate to={PATHS.dashboard} replace /> },
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
         element: <AuthLayout />,
         children: [
             { path: PATHS.login, element: <Login /> },
+            { path: PATHS.signup, element: <Signup /> },
         ],
     },
 
