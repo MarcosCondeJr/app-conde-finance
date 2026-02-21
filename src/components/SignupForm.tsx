@@ -59,12 +59,12 @@ export function SignupForm({
               <Field>
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <FieldLabel htmlFor="password">Senha</FieldLabel>
                     <Input id="password" type="password" required />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="confirm-password">
-                      Confirm Password
+                      Confirma Senha
                     </FieldLabel>
                     <Input id="confirm-password" type="password" required />
                   </Field>
