@@ -69,9 +69,6 @@ export function LoginForm({
         </div>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center">
-        Ao clicar em continuar, você concorda com nossos Termos de Serviço e Política de Privacidade.
-      </FieldDescription>
     </div>
   )
 }
