@@ -1,3 +1,4 @@
+import BankForm from "@/components/banks/BankForm";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
@@ -12,10 +13,14 @@ export default function Banks() {
           </p>
         </div>
         <div>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Adicionar Banco
-            </Button>
+          <BankForm
+            trigger={
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Adicionar Banco
+              </Button>
+            }
+          />
         </div>
       </div>
     </div>
