@@ -8,10 +8,10 @@ import { NavUser } from "../NavUser";
 
 const navItems = [
   { path: PATHS.dashboard, label: "Dashboard", icon: LayoutDashboard },
-  { path: PATHS.banks, label: "Banks", icon: Building2 },
-  { path: PATHS.accounts, label: "Accounts", icon: Wallet },
-  { path: PATHS.categories, label: "Categories", icon: Tags },
-  { path: PATHS.transactions, label: "Transactions", icon: Receipt },
+  { path: PATHS.banks, label: "Bancos", icon: Building2 },
+  { path: PATHS.accounts, label: "Contas", icon: Wallet },
+  { path: PATHS.categories, label: "Categorias", icon: Tags },
+  { path: PATHS.transactions, label: "Transações", icon: Receipt },
 ];
 
 const user = {

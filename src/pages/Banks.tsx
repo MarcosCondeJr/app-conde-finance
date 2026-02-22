@@ -1,3 +1,23 @@
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+
 export default function Banks() {
-  return <h1>Banks</h1>;
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Bancos</h1>
+          <p className="text-muted-foreground">
+            Gerencie suas instituições bancárias
+          </p>
+        </div>
+        <div>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Adicionar Banco
+            </Button>
+        </div>
+      </div>
+    </div>
+  );
 }
