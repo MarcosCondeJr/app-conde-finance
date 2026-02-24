@@ -1,15 +1,15 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Link } from "react-router-dom"
-import { PATHS } from "@/routes/paths"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import { PATHS } from "@/routes/paths";
 
 export function SignupForm({
   className,
@@ -20,9 +20,7 @@ export function SignupForm({
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <div className="bg-primary flex items-center justify-center p-6 text-primary-foreground">
-              <div className="text-xl font-semibold">
-                  Conde Finance
-              </div>
+            <div className="text-xl font-semibold">Conde Finance</div>
           </div>
           <form className="p-6 md:p-8">
             <FieldGroup>
@@ -77,7 +75,7 @@ export function SignupForm({
               <Field>
                 <Button type="submit">Criar conta</Button>
               </Field>
-              
+
               <FieldDescription className="text-center">
                 Já tem uma conta? <Link to={PATHS.login}>Entrar</Link>
               </FieldDescription>
@@ -90,5 +88,5 @@ export function SignupForm({
         and <a href="#">Privacy Policy</a>.
       </FieldDescription> */}
     </div>
-  )
+  );
 }
