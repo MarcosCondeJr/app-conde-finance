@@ -1,5 +1,5 @@
-import BankForm from "@/components/banks/BankForm";
-import { BankList } from "@/components/banks/BankList";
+import BankForm from "@/components/bank/BankForm";
+import { BankList } from "@/components/bank/BankList";
 import { Button } from "@/components/ui/button";
 import type { Bank } from "@/types/bank/Bank";
 import { Plus } from "lucide-react";
