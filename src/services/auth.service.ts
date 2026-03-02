@@ -4,7 +4,7 @@ import type { LoginResponse } from "@/types/auth/LoginResponse";
 
 export const AuthService = {
     async login(payload: LoginRequest) {
-        const res = await http.post<LoginResponse>("/login", payload);
+        const res = await http.post<LoginResponse>("/auth/login", payload);
         return res.data;
     }
 }

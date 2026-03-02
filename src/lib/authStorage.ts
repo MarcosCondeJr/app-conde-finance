@@ -1,6 +1,3 @@
-import type { LoginRequest } from "@/types/auth/LoginRequest";
-import { http } from "./http";
-import type { LoginResponse } from "@/types/auth/LoginResponse";
 import type { UserResponse } from "@/types/user/UserResponse";
 
 const TOKEN_KEY = "access_token";

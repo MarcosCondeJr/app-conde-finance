@@ -2,7 +2,6 @@ import { authStorage } from "@/lib/authStorage";
 import { AuthService } from "@/services/auth.service";
 import type { ApiError } from "@/types/api/ApiError";
 import type { LoginRequest } from "@/types/auth/LoginRequest";
-import type { LoginResponse } from "@/types/auth/LoginResponse";
 import type { UserResponse } from "@/types/user/UserResponse";
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
@@ -10,7 +9,7 @@ type AuthContextType = {
   user: UserResponse | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (data: LoginResponse) => Promise<void>;
+  login: (data: LoginRequest) => Promise<void>;
   logout: () => void;
 };
 
@@ -22,9 +21,9 @@ export function AuthProvider({ children }: { children: ReactNode}) {
 
     useEffect(() => {
         const token = authStorage.getToken();
-        const storedUser = authStorage.getUser();
+        const user = authStorage.getUser();
 
-        if (token && storedUser) setUser(storedUser);
+        if (token && user) setUser(user);
         else authStorage.clear();
 
         setIsLoading(false);
