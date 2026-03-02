@@ -12,7 +12,7 @@ import Transactions from "../pages/Transactions";
 import Signup from "@/pages/Signup";
 
 export const router = createBrowserRouter([
-    { path: "/", element: <Navigate to={PATHS.dashboard} replace /> },
+    { path: "/", element: <Navigate to={PATHS.home} replace /> },
 
     {
         element: <AuthLayout />,
@@ -28,9 +28,7 @@ export const router = createBrowserRouter([
             {
                 element: <Layout />,
                 children: [
-                    { path: PATHS.root, element: <Navigate to={PATHS.dashboard} replace /> },
-
-                    { path: PATHS.dashboard, element: <Dashboard /> },
+                    { path: PATHS.home, element: <Dashboard /> },
                     { path: PATHS.banks, element: <Banks /> },
                     { path: PATHS.accounts, element: <Accounts /> },
                     { path: PATHS.categories, element: <Categories /> },
@@ -40,5 +38,5 @@ export const router = createBrowserRouter([
         ]
     },
 
-    { path: "*", element: <Navigate to={PATHS.dashboard} replace /> },
+    { path: "*", element: <Navigate to={PATHS.home} replace /> },
 ])
