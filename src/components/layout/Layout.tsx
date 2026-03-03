@@ -7,7 +7,7 @@ import {cn} from "@/lib/utils";
 import { NavUser } from "../NavUser";
 
 const navItems = [
-  { path: PATHS.dashboard, label: "Dashboard", icon: LayoutDashboard },
+  { path: PATHS.home, label: "Dashboard", icon: LayoutDashboard },
   { path: PATHS.banks, label: "Bancos", icon: Building2 },
   { path: PATHS.accounts, label: "Contas", icon: Wallet },
   { path: PATHS.categories, label: "Categorias", icon: Tags },

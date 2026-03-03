@@ -12,11 +12,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { PATHS } from "@/routes/paths";
 import { useAuth } from "@/contexts/AuthContext";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormData } from "@/schemas/auth/login.schema";
 import type { ApiError } from "@/types/api/ApiError";
 import type { LoginRequest } from "@/types/auth/LoginRequest";
+import { maskCPF, unmask } from "@/utils/masks";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const { login } = useAuth();
@@ -24,6 +25,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
   const {
     register,
+    control,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
@@ -33,7 +35,6 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       login: "",
       password: "",
     },
-    mode: "onSubmit",
   });
 
   async function onSubmit(data: LoginRequest) {
@@ -70,13 +71,29 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               </div>
 
               <Field>
-                <FieldLabel htmlFor="login">Login</FieldLabel>
-                <Input
-                  id="login"
-                  type="text"
-                  maxLength={14}
-                  {...register("login")}
+                <FieldLabel htmlFor="login">CPF</FieldLabel>
+
+                <Controller
+                  name="login"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="login"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder="Informe seu CPF"
+                      maxLength={14}
+                      value={maskCPF(field.value ?? "")}
+                      onChange={(e) => {
+                        field.onChange(unmask(e.target.value));
+                      }}
+                      onBlur={field.onBlur}
+                      ref={field.ref}
+                    />
+                  )}
                 />
+
                 {errors.login?.message && (
                   <p className="text-xs text-red-500">{errors.login.message}</p>
                 )}
@@ -98,6 +115,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   type="password"
                   maxLength={8}
                   {...register("password")}
+                  placeholder="Informe sua senha"
                 />
                 {errors.password?.message && (
                   <p className="text-xs text-red-500">{errors.password.message}</p>

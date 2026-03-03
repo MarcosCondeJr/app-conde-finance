@@ -5,7 +5,8 @@ export const loginSchema = z.object({
     .string()
     .trim()
     .min(1, "O login é obrigatório")
-    .max(14, "Máximo de 14 caracteres"),
+    .max(14, "Máximo de 14 caracteres")
+    .transform((val) => val.replace(/\D/g, "")),
   password: z
     .string()
     .min(1, "A senha é obrigatória")
