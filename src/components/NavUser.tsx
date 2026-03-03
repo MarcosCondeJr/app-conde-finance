@@ -19,17 +19,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import type { UserResponse } from "@/types/user/UserResponse"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
+export function NavUser({ user, logout }: {
+  user: UserResponse | null
+  logout: () => void
 }) {
-//   const { isMobile } = useSidebar()
+
+  if(!user){
+    return;
+  }
 
   return (
         <DropdownMenu>
@@ -39,8 +38,8 @@ export function NavUser({
                 className="
                     flex w-full items-center gap-2 rounded-lg px-4 py-2 text-left text-sm
                     outline-none transition-colors
-                    hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
                     data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground
+                    hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
                 "
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
@@ -92,7 +91,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={logout}>
               <LogOutIcon />
               Sair
             </DropdownMenuItem>

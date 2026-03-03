@@ -81,7 +81,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                       id="login"
                       type="text"
                       inputMode="numeric"
-                      autoComplete="off"
+                      autoComplete="on"
                       placeholder="Informe seu CPF"
                       maxLength={14}
                       value={maskCPF(field.value ?? "")}

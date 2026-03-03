@@ -6,4 +6,5 @@ export type UserResponse = {
   email: string;
   login: string;
   role: UserRole;
+  avatar?: string;
 };
