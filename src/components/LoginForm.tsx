@@ -129,7 +129,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               </Field>
 
               <FieldDescription className="text-center">
-                Não tem uma conta? <Link to={PATHS.signup}> Cadastre-se</Link>
+                Não tem uma conta? <Link to={PATHS.register}> Cadastre-se</Link>
               </FieldDescription>
             </FieldGroup>
           </form>

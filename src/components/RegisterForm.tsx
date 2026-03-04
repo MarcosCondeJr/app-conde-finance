@@ -12,10 +12,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { PATHS } from "@/routes/paths";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema, type SignupFormData } from "@/schemas/auth/signup.schema";
 import { maskCPF, unmask } from "@/utils/masks";
+import { registerSchema, type RegisterFormData } from "@/schemas/auth/register.schema";
 
-export function SignupForm({ className, ...props}: React.ComponentProps<"div">) {
+export function RegisterForm({ className, ...props}: React.ComponentProps<"div">) {
 
   const navigate = useNavigate();
 
@@ -25,15 +25,15 @@ export function SignupForm({ className, ...props}: React.ComponentProps<"div">) 
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       login: "",
       password: "",
     },
   });
 
-  async function onResgister(data: SignupFormData) {
+  async function onResgister(data: RegisterFormData) {
     console.log(data);
   }
 
