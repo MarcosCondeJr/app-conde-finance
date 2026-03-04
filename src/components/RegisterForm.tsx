@@ -159,7 +159,9 @@ export function RegisterForm({
                 </Field>
               </Field>
               <Field>
-                <Button type="submit">Criar conta</Button>
+                <Button type="submit" disabled={isSubmitting} className="w-full">
+                  {isSubmitting ? "Criando conta..." : "Criar conta"}
+                </Button>
               </Field>
 
               <FieldDescription className="text-center">
