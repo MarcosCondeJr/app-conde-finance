@@ -20,6 +20,7 @@ import type { LoginRequest } from "@/types/auth/LoginRequest";
 import { maskCPF, unmask } from "@/utils/masks";
 import { Toaster } from "./ui/sonner";
 import { applyErrors } from "@/utils/applyErrors";
+import { toast } from "sonner";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const { login } = useAuth();
@@ -42,6 +43,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   async function onSubmit(data: LoginRequest) {
     try {
       await login(data);
+      toast.success("Login efetuado com sucesso!")
       navigate(PATHS.home, {replace: true});
     } catch (err) {
       applyErrors(err as ApiError, setError);
@@ -121,8 +123,6 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   {isSubmitting ? "Entrando..." : "Entrar"}
                 </Button>
               </Field>
-
-              <Toaster />
 
               <FieldDescription className="text-center">
                 Não tem uma conta? <Link to={PATHS.register}> Cadastre-se</Link>
