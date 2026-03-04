@@ -13,10 +13,19 @@ import { PATHS } from "@/routes/paths";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { maskCPF, unmask } from "@/utils/masks";
-import { registerSchema, type RegisterFormData } from "@/schemas/auth/register.schema";
+import {
+  registerSchema,
+  type RegisterFormData,
+} from "@/schemas/auth/register.schema";
+import { applyErrors } from "@/utils/applyErrors";
+import type { ApiError } from "@/types/api/ApiError";
+import { AuthService } from "@/services/auth.service";
+import { toast } from "sonner";
 
-export function RegisterForm({ className, ...props}: React.ComponentProps<"div">) {
-
+export function RegisterForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   const navigate = useNavigate();
 
   const {
@@ -34,7 +43,15 @@ export function RegisterForm({ className, ...props}: React.ComponentProps<"div">
   });
 
   async function onResgister(data: RegisterFormData) {
-    console.log(data);
+    try {
+      const { confirmPassword, ...payload } = data;
+      await AuthService.register(payload);
+      
+      toast.success("Conta cadastrada")
+      navigate(PATHS.login, { replace: true });
+    } catch (err) {
+      applyErrors(err as ApiError, setError);
+    }
   }
 
   return (
@@ -109,31 +126,35 @@ export function RegisterForm({ className, ...props}: React.ComponentProps<"div">
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
                     <FieldLabel htmlFor="password">Senha</FieldLabel>
-                      <Input
-                        id="password"
-                        type="password"
-                        maxLength={8}
-                        {...register("password")}
-                        placeholder="Informe sua senha"
-                      />
-                      {errors.password?.message && (
-                        <p className="text-xs text-red-500">{errors.password.message}</p>
-                      )}
+                    <Input
+                      id="password"
+                      type="password"
+                      maxLength={8}
+                      {...register("password")}
+                      placeholder="Informe sua senha"
+                    />
+                    {errors.password?.message && (
+                      <p className="text-xs text-red-500">
+                        {errors.password.message}
+                      </p>
+                    )}
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="confirmPassword">
                       Confirma Senha
                     </FieldLabel>
-                      <Input
-                        id="confirmPassword"
-                        type="password"
-                        maxLength={8}
-                        {...register("confirmPassword")}
-                        placeholder="Confirme sua senha"
-                      />
-                      {errors.confirmPassword?.message && (
-                        <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>
-                      )}
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      maxLength={8}
+                      {...register("confirmPassword")}
+                      placeholder="Confirme sua senha"
+                    />
+                    {errors.confirmPassword?.message && (
+                      <p className="text-xs text-red-500">
+                        {errors.confirmPassword.message}
+                      </p>
+                    )}
                   </Field>
                 </Field>
               </Field>
