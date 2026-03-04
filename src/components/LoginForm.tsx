@@ -18,7 +18,8 @@ import { loginSchema, type LoginFormData } from "@/schemas/auth/login.schema";
 import type { ApiError } from "@/types/api/ApiError";
 import type { LoginRequest } from "@/types/auth/LoginRequest";
 import { maskCPF, unmask } from "@/utils/masks";
-import { applyFieldErrors } from "@/utils/applyFieldErrors";
+import { Toaster } from "./ui/sonner";
+import { applyErrors } from "@/utils/applyErrors";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const { login } = useAuth();
@@ -43,7 +44,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       await login(data);
       navigate(PATHS.home, {replace: true});
     } catch (err) {
-      applyFieldErrors(err as ApiError, setError);
+      applyErrors(err as ApiError, setError);
     }
   }
 
@@ -120,6 +121,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   {isSubmitting ? "Entrando..." : "Entrar"}
                 </Button>
               </Field>
+
+              <Toaster />
 
               <FieldDescription className="text-center">
                 Não tem uma conta? <Link to={PATHS.register}> Cadastre-se</Link>

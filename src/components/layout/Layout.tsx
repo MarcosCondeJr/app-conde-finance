@@ -11,7 +11,6 @@ import { PATHS } from "../../routes/paths";
 import {
   Link,
   Outlet,
-  replace,
   useLocation,
   useNavigate,
 } from "react-router-dom";
