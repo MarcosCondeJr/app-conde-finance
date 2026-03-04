@@ -18,6 +18,7 @@ import { loginSchema, type LoginFormData } from "@/schemas/auth/login.schema";
 import type { ApiError } from "@/types/api/ApiError";
 import type { LoginRequest } from "@/types/auth/LoginRequest";
 import { maskCPF, unmask } from "@/utils/masks";
+import { applyFieldErrors } from "@/utils/applyFieldErrors";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const { login } = useAuth();
@@ -42,18 +43,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       await login(data);
       navigate(PATHS.home, {replace: true});
     } catch (err) {
-      const apiErr = err as ApiError;
-
-      if (apiErr.fields?.length) {
-        for (const f of apiErr.fields) {
-          if (f.name === "login" || f.name === "password") {
-            setError(f.name, { type: "server", message: f.message });
-          }
-        }
-        return;
-      }
-
-      setError("login", { type: "server", message: apiErr.title ?? "Falha ao fazer login" });
+      applyFieldErrors(err as ApiError, setError);
     }
   }
 
@@ -119,6 +109,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                 />
                 {errors.password?.message && (
                   <p className="text-xs text-red-500">{errors.password.message}</p>
+                )}
+                {errors.root?.message && (
+                  <p className="text-sm text-red-500">{errors.root.message}</p>
                 )}
               </Field>
 
