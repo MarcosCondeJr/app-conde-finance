@@ -1,17 +1,8 @@
 import BankForm from "@/components/bank/BankForm";
 import { BankList } from "@/components/bank/BankList";
 import { Button } from "@/components/ui/button";
-import type { Bank } from "@/types/bank/Bank";
+import { useBank } from "@/hooks/useBank";
 import { Plus } from "lucide-react";
-
-export const banks: Bank[] = [
-  { id: "1", code: "001", name: "Banco do Brasil S.A." },
-  { id: "2", code: "237", name: "Banco Bradesco S.A." },
-  { id: "3", code: "341", name: "Itaú Unibanco S.A." },
-  { id: "4", code: "104", name: "Caixa Econômica Federal" },
-  { id: "5", code: "260", name: "Nu Pagamentos S.A. (Nubank)" },
-  { id: "6", code: "077", name: "Banco Inter S.A." },
-];
 
 export default function Banks() {
   return (
@@ -34,7 +25,7 @@ export default function Banks() {
           />
         </div>
       </div>
-        <BankList data={banks}/>
+        <BankList />
 
     </div>
   );

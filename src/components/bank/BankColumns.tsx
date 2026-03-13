@@ -7,7 +7,7 @@ import type { BankColumnsProps } from "@/types/bank/BankColumnsProps";
 export function getBankColumns({
   onEdit,
   onDelete,
-}: BankColumnsProps): ColumnDef<Bank>[] {
+}: any): ColumnDef<Bank>[] {
   return [
     {
       accessorKey: "code",

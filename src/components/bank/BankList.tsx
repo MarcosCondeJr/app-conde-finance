@@ -5,7 +5,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  type ColumnDef,
   type SortingState,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
@@ -20,45 +19,46 @@ import {
   TableRow,
 } from "../ui/table";
 import { getBankColumns } from "./BankColumns";
-import type { BankListProps } from "@/types/bank/BankListProps";
+import { useBank } from "@/hooks/useBank";
 
-export function BankList({ data, onEdit, onDelete }: BankListProps) {
+export function BankList() {
+  const {
+    banks,
+    pageInfo,
+    search,
+    setSearch,
+    isLoading,
+    nextPage,
+    previousPage,
+    updateBank,
+    removeBank,
+  } = useBank();
+
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState("");
 
   const columns = useMemo(
-    () => getBankColumns({ onEdit, onDelete }),
-    [onEdit, onDelete]
+    () => getBankColumns({ updateBank, removeBank }),
+    [updateBank, removeBank]
   );
 
-  const filteredData = useMemo(() => {
-    const q = globalFilter.trim().toLocaleLowerCase();
-    if (!q) return data;
-
-    return data.filter(
-      (b) =>
-        b.code.toLowerCase().includes(q) || b.name.toLowerCase().includes(q),
-    );
-  }, [data, globalFilter]);
-
   const table = useReactTable({
-    data: filteredData,
+    data: banks,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    initialState: { pagination: { pageSize: 10 } },
+
+    manualPagination: true,
+    pageCount: pageInfo?.totalPages ?? 0
   });
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
         <Input
-          value={globalFilter}
-          onChange={(e) => setGlobalFilter(e.target.value)}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           placeholder="Filtrar bancos..."
           className="w-full max-w-sm"
         />
@@ -116,29 +116,32 @@ export function BankList({ data, onEdit, onDelete }: BankListProps) {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="text-sm text-muted-foreground">
-          Total: {table.getFilteredRowModel().rows.length} registro(s)
+          Total: {pageInfo?.totalElements ?? 0} registro(s)
         </div>
 
         <div className="flex items-center gap-3">
           <div className="text-sm text-muted-foreground">
-            Página {table.getState().pagination.pageIndex + 1} de{" "}
-            {table.getPageCount()}
+            Página {(pageInfo?.number ?? 0) + 1} de {pageInfo?.totalPages ?? 1}
           </div>
 
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={previousPage}
+              disabled={(pageInfo?.number ?? 0) === 0 || isLoading}
             >
               Prev
             </Button>
+
             <Button
               variant="outline"
               size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={nextPage}
+              disabled={
+                (pageInfo?.number ?? 0) + 1 >= (pageInfo?.totalPages ?? 0) ||
+                isLoading
+              }
             >
               Next
             </Button>
