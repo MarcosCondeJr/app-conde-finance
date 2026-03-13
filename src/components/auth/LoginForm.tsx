@@ -18,7 +18,7 @@ import { loginSchema, type LoginFormData } from "@/schemas/auth/login.schema";
 import type { ApiError } from "@/types/api/ApiError";
 import type { LoginRequest } from "@/types/auth/LoginRequest";
 import { maskCPF, unmask } from "@/utils/masks";
-import { Toaster } from "./ui/sonner";
+import { Toaster } from "../ui/sonner";
 import { applyErrors } from "@/utils/applyErrors";
 import { toast } from "sonner";
 
