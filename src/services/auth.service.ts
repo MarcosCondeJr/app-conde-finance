@@ -7,13 +7,13 @@ import type { RegisterResponse } from "@/types/auth/RegisterResponse";
 export const AuthService = {
   async login(payload: LoginRequest) {
     return await api
-      .post<LoginResponse>("/auth/login", payload)
+      .post<LoginResponse>("/api/auth/login", payload)
       .then((res) => res.data);
   },
 
   async register(payload: RegisterRequest) {
     return await api
-      .post<RegisterResponse>("/auth/register", payload)
+      .post<RegisterResponse>("/api/auth/register", payload)
       .then((res) => res.data);
   },
 };
