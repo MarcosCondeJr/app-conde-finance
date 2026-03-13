@@ -42,7 +42,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
   async function onSubmit(data: LoginRequest) {
     try {
-      await login(data);
+      await login(data)
       toast.success("Login efetuado com sucesso!")
       navigate(PATHS.home, {replace: true});
     } catch (err) {

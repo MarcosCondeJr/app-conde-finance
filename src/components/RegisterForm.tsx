@@ -96,7 +96,7 @@ export function RegisterForm({
                 )}
               </Field>
               <Field>
-                <FieldLabel htmlFor="login">CPF</FieldLabel>
+                <FieldLabel htmlFor="login">Login (CPF)</FieldLabel>
                 <Controller
                   name="login"
                   control={control}

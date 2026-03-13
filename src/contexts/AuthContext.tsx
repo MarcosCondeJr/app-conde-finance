@@ -1,9 +1,16 @@
 import { authStorage } from "@/lib/authStorage";
+import { isTokenValid } from "@/lib/token";
 import { AuthService } from "@/services/auth.service";
-import type { ApiError } from "@/types/api/ApiError";
 import type { LoginRequest } from "@/types/auth/LoginRequest";
 import type { UserResponse } from "@/types/user/UserResponse";
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 type AuthContextType = {
   user: UserResponse | null;
@@ -15,47 +22,52 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode}) {
-    const [user, setUser] = useState<UserResponse | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<UserResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const token = authStorage.getToken();
-        const user = authStorage.getUser();
+  useEffect(() => {
+    const token = authStorage.getToken();
+    const user = authStorage.getUser();
 
-        if (token && user) setUser(user);
-        else authStorage.clear();
-
-        setIsLoading(false);
-    }, []);
-
-    async function login(data: LoginRequest) {
-        const res = await AuthService.login(data);
-        authStorage.set(res.token, res.user);
-        setUser(res.user);
+    if (token && user && isTokenValid(token)) {
+      setUser(user);
+    } else {
+      authStorage.clear();
+      setUser(null);
     }
 
-    function logout() {
-        authStorage.clear();
-        setUser(null);
-    }
+    setIsLoading(false);
+  }, []);
 
-    function handleAuthError(err: ApiError) {
-        if (err.status === 401) logout();
-    }
+  async function login(data: LoginRequest) {
+    const res = await AuthService.login(data);
+    authStorage.set(res.token, res.user);
+    setUser(res.user);
+  }
 
-    const value = useMemo(
-        () => ({
-            user,
-            isLoading,
-            isAuthenticated: !!user,
-            login,
-            logout,
-            }),
-            [user, isLoading]
-        );
+  function logout() {
+    authStorage.clear();
+    setUser(null);
+  }
 
-    return <AuthContext.Provider  value={value}>{children}</AuthContext.Provider>;
+  const isAuthenticated = useMemo(() => {
+    const token = authStorage.getToken();
+    return !!user && isTokenValid(token);
+  }, [user]);
+
+  const value = useMemo(
+    () => ({
+      user,
+      isLoading,
+      isAuthenticated,
+      login,
+      logout,
+    }),
+    [user, isLoading],
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
