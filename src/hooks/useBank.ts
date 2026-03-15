@@ -1,128 +1,114 @@
 import { bankService } from "@/services/bank.service";
-import type { PageInfo } from "@/types/pagination/PageInfo";
 import type { Bank } from "@/types/bank/Bank";
 import type { BankRequest } from "@/types/bank/BankRequest";
 import { useCallback, useEffect, useState } from "react";
-import { usePaginationState } from "./usePaginationState";
+import type { BankFilters } from "@/types/bank/BankFilters";
 
-const initialPageInfo: PageInfo = {
+const initialFilters: BankFilters = {
+  name: "",
+  code: "",
+  active: "",
+  page: 0,
   size: 10,
-  number: 0,
-  totalElements: 0,
-  totalPages: 0,
+  sort: "code",
+  direction: "asc",
 };
 
 export function useBank() {
   const [banks, setBanks] = useState<Bank[]>([]);
-  const [pageInfo, setPageInfo] = useState<PageInfo>(initialPageInfo);
-
-  const {
-    page,
-    size,
-    search,
-    setPage,
-    setSearch,
-    goToNextPage,
-    goToPreviousPage,
-  } = usePaginationState(10);
-
+  const [filters, setFilters] = useState<BankFilters>(initialFilters);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const fetchBanks = useCallback(async () => {
     try {
       setIsLoading(true);
-      setError(null);
 
-      const response = await bankService.getBanks({
-        page,
-        size,
-        search,
-      });
+      const response = await bankService.getBanks(filters);
 
       setBanks(response.content);
-      setPageInfo(response.page);
+      setTotalPages(response.page.totalPages);
+      setTotalElements(response.page.totalElements);
     } catch (err) {
       console.error("Erro ao buscar bancos:", err);
-      setError("Não foi possível carregar os bancos.");
+      setBanks([]);
+      setTotalPages(0);
+      setTotalElements(0);
     } finally {
       setIsLoading(false);
     }
-  }, [page, size, search]);
+  }, [filters]);
 
-  const createBank = useCallback(
-    async (payload: BankRequest) => {
-      try {
-        setIsSaving(true);
-        setError(null);
-
-        await bankService.saveBank(payload);
-
-        setPage(0);
-      } catch (err) {
-        console.error("Erro ao cadastrar banco:", err);
-        setError("Não foi possível cadastrar o banco.");
-        throw err;
-      } finally {
-        setIsSaving(false);
-      }
-    },
-    [setPage],
-  );
+  const createBank = useCallback(async (payload: BankRequest) => {
+    try {
+      await bankService.saveBank(payload);
+    } catch (err) {
+      console.error("Erro ao cadastrar banco:", err);
+      throw err;
+    } finally {
+    }
+  }, []);
 
   const updateBank = useCallback(
     async (id: string, payload: Partial<BankRequest>) => {
       try {
-        setIsSaving(true);
-        setError(null);
-
         await bankService.editBank(id, payload);
         await fetchBanks();
       } catch (err) {
         console.error("Erro ao editar banco:", err);
-        setError("Não foi possível editar o banco.");
         throw err;
       } finally {
-        setIsSaving(false);
       }
     },
     [fetchBanks],
   );
 
-  const removeBank = useCallback(
-    async (id: string) => {
-      try {
-        setIsSaving(true);
-        setError(null);
+  const removeBank = useCallback(async (id: string) => {
+    try {
+      await bankService.deleteBank(id);
+    } catch (err) {
+      console.error("Erro ao remover banco:", err);
+      throw err;
+    } finally {
+    }
+  }, []);
 
-        await bankService.deleteBank(id);
+  function clearFilters() {
+    setFilters(initialFilters);
+  }
 
-        const isLastItemOnPage = banks.length === 1 && page > 0;
+  function changePage(page: number) {
+    setFilters((prev) => ({
+      ...prev,
+      page,
+    }));
+  }
 
-        if (isLastItemOnPage) {
-          setPage(page - 1);
-        } else {
-          await fetchBanks();
-        }
-      } catch (err) {
-        console.error("Erro ao remover banco:", err);
-        setError("Não foi possível remover o banco.");
-        throw err;
-      } finally {
-        setIsSaving(false);
-      }
-    },
-    [banks.length, page, fetchBanks, setPage],
-  );
+  function changeSorting(sort: string) {
+    setFilters((prev) => ({
+      ...prev,
+      page: 0,
+      sort,
+      direction:
+        prev.sort === sort
+          ? prev.direction === "asc"
+            ? "desc"
+            : "asc"
+          : "asc",
+    }));
+  }
 
-  const nextPage = useCallback(() => {
-    goToNextPage(pageInfo.totalPages);
-  }, [goToNextPage, pageInfo.totalPages]);
-
-  const previousPage = useCallback(() => {
-    goToPreviousPage();
-  }, [goToPreviousPage]);
+  function updateFilter<K extends keyof BankFilters>(
+    key: K,
+    value: BankFilters[K],
+  ) {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+      page: key === "page" ? Number(value) : 0,
+    }));
+  }
 
   useEffect(() => {
     fetchBanks();
@@ -130,20 +116,18 @@ export function useBank() {
 
   return {
     banks,
-    pageInfo,
-    page,
-    size,
-    search,
+    filters,
+    totalPages,
+    totalElements,
     isLoading,
-    isSaving,
-    error,
-    setPage,
-    setSearch,
+    updateFilter,
+    clearFilters,
+    changePage,
+    changeSorting,
+    refetch: fetchBanks,
     fetchBanks,
     createBank,
     updateBank,
     removeBank,
-    nextPage,
-    previousPage,
   };
 }
