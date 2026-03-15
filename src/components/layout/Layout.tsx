@@ -40,7 +40,7 @@ export function Layout({ children }: any) {
   }
 
   return (
-    <div className="min-h-screen min-w-screen">
+    <div className="min-h-screen max-w-screen">
       <aside className="fixed left-0 top-0 h-screen w-64 border-r flex flex-col">
         <div className="flex h-16 items-center justify-center border-b px-6 shrink-0">
           <h2 className="text-xl font-bold text-primary">Conde Finance</h2>
