@@ -45,7 +45,6 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       toast.success("Login efetuado com sucesso!")
       navigate(PATHS.home, {replace: true});
     } catch (err) {
-      console.log(err)
       applyErrors(err as ApiError, setError);
     }
   }
