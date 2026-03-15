@@ -53,7 +53,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAuthenticated = useMemo(() => {
     const token = authStorage.getToken();
-    return !!user && isTokenValid(token);
+
+    if (!user || !token) {
+      return false;
+    }
+
+    try {
+      return isTokenValid(token);
+    } catch {
+      return false;
+    }
   }, [user]);
 
   const value = useMemo(
