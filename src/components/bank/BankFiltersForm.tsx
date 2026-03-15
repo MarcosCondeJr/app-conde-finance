@@ -1,6 +1,7 @@
 import type { BankFilters } from "@/types/bank/BankFilters";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 type BankFiltersProps = {
   filters: BankFilters;
@@ -26,21 +27,24 @@ export function BankFiltersForm({ filters, onChange, onClear }: BankFiltersProps
         onChange={(e) => onChange("name", e.target.value)}
       />
 
-      <select
-        className="h-9 rounded-md border bg-background px-3 text-sm"
-        value={String(filters.active)}
-        onChange={(e) => {
-          const value = e.target.value;
+      <Select onValueChange={(value) => {
           onChange(
             "active",
             value === "" ? "" : value === "true"
           );
-        }}
-      >
-        <option value="">Todos</option>
-        <option value="true">Ativos</option>
-        <option value="false">Inativos</option>
-      </select>
+        }}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Status"/>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="true">Ativo</SelectItem>
+            <SelectItem value="false">Inativo</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+        {/* value={String(filters.active)}
+         */}
+      </Select>
 
       <div className="flex gap-2">
         <Button type="button" variant="outline" onClick={onClear}>
