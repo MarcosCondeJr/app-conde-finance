@@ -18,7 +18,6 @@ import { loginSchema, type LoginFormData } from "@/schemas/auth/login.schema";
 import type { ApiError } from "@/types/api/ApiError";
 import type { LoginRequest } from "@/types/auth/LoginRequest";
 import { maskCPF, unmask } from "@/utils/masks";
-import { Toaster } from "../ui/sonner";
 import { applyErrors } from "@/utils/applyErrors";
 import { toast } from "sonner";
 
@@ -46,6 +45,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       toast.success("Login efetuado com sucesso!")
       navigate(PATHS.home, {replace: true});
     } catch (err) {
+      console.log(err)
       applyErrors(err as ApiError, setError);
     }
   }

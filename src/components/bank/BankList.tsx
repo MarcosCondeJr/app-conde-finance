@@ -1,15 +1,4 @@
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-  type SortingState,
-} from "@tanstack/react-table";
-import { useMemo, useState } from "react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import {
   Table,
   TableBody,
@@ -18,136 +7,105 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { getBankColumns } from "./BankColumns";
-import { useBank } from "@/hooks/useBank";
+import type { Bank } from "@/types/bank/Bank";
 
-export function BankList() {
-  const {
-    banks,
-    pageInfo,
-    search,
-    setSearch,
-    isLoading,
-    nextPage,
-    previousPage,
-    updateBank,
-    removeBank,
-  } = useBank();
-
-  const [sorting, setSorting] = useState<SortingState>([]);
-
-  const columns = useMemo(
-    () => getBankColumns({ updateBank, removeBank }),
-    [updateBank, removeBank]
-  );
-
-  const table = useReactTable({
-    data: banks,
-    columns,
-    state: { sorting },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-
-    manualPagination: true,
-    pageCount: pageInfo?.totalPages ?? 0
-  });
+type BankTableProps = {
+  data: Bank[];
+  isLoading: boolean;
+  sortBy: string;
+  direction: "asc" | "desc";
+  onSort: (field: string) => void;
+  onEdit?: (bank: Bank) => void;
+  onDelete?: (bank: Bank) => void;
+};
+export function BankList({
+  data,
+  isLoading,
+  sortBy,
+  direction,
+  onSort,
+  onEdit,
+  onDelete,
+}: BankTableProps) {
+  function renderSortIcon(field: string) {
+    if (sortBy !== field) return "↕";
+    return direction === "asc" ? "↑" : "↓";
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Filtrar bancos..."
-          className="w-full max-w-sm"
-        />
-      </div>
+    <div className="rounded-xl border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <button
+                type="button"
+                className="flex items-center gap-1"
+                onClick={() => onSort("code")}
+              >
+                Código {renderSortIcon("code")}
+              </button>
+            </TableHead>
 
-      <div className="rounded-xl border overflow-hidden">
-        <Table className="table-fixed">
-          <TableHeader>
-            {table.getHeaderGroups().map((hg) => (
-              <TableRow key={hg.id}>
-                {hg.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    style={{ width: header.getSize() }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
+            <TableHead>
+              <button
+                type="button"
+                className="flex items-center gap-1"
+                onClick={() => onSort("name")}
+              >
+                Nome {renderSortIcon("name")}
+              </button>
+            </TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Ações</TableHead>
+          </TableRow>
+        </TableHeader>
 
-          <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center text-muted-foreground"
-                >
-                  Nenhum resultado
+        <TableBody>
+          {isLoading ? (
+            <TableRow>
+              <TableCell colSpan={3} className="text-center">
+                Carregando...
+              </TableCell>
+            </TableRow>
+          ) : data.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={3} className="text-center">
+                Nenhum banco encontrado.
+              </TableCell>
+            </TableRow>
+          ) : (
+            data.map((bank) => (
+              <TableRow key={bank.id}>
+                <TableCell>{bank.code}</TableCell>
+                <TableCell>{bank.name}</TableCell>
+                <TableCell>{bank.active ? "Ativo" : "Inativo"}</TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onEdit?.(bank)}
+                    >
+                      Editar
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => onDelete?.(bank)}
+                    >
+                      Excluir
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="text-sm text-muted-foreground">
-          Total: {pageInfo?.totalElements ?? 0} registro(s)
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="text-sm text-muted-foreground">
-            Página {(pageInfo?.number ?? 0) + 1} de {pageInfo?.totalPages ?? 1}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={previousPage}
-              disabled={(pageInfo?.number ?? 0) === 0 || isLoading}
-            >
-              Prev
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={nextPage}
-              disabled={
-                (pageInfo?.number ?? 0) + 1 >= (pageInfo?.totalPages ?? 0) ||
-                isLoading
-              }
-            >
-              Next
-            </Button>
-          </div>
-        </div>
-      </div>
+            ))
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }
