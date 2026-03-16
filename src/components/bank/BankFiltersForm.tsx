@@ -2,6 +2,7 @@ import type { BankFilters } from "@/types/bank/BankFilters";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Eraser } from "lucide-react";
 
 type BankFiltersProps = {
   filters: BankFilters;
@@ -48,6 +49,7 @@ export function BankFiltersForm({ filters, onChange, onClear }: BankFiltersProps
 
       <div className="flex gap-2">
         <Button type="button" variant="outline" onClick={onClear}>
+          <Eraser />
           Limpar filtros
         </Button>
       </div>

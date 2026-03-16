@@ -5,7 +5,7 @@ import AuthLayout from "../components/layout/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import { Layout } from "../components/layout/Layout";
 import Dashboard from "../pages/Dashboard";
-import Banks from "../pages/Banks";
+import Banks from "../pages/BankPage";
 import Accounts from "../pages/Accounts";
 import Categories from "../pages/Categories";
 import Transactions from "../pages/Transactions";
