@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from "react"
 import { z } from "zod"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { toast } from "sonner";
 
 const bankSchema = z.object({
   code: z
@@ -33,7 +34,7 @@ const bankSchema = z.object({
 
 type BankFormValues = z.infer<typeof bankSchema>
 
-export default function BankForm({ bank, trigger }: BankFormProps) {
+export default function BankForm({ bank, trigger, onSave }: BankFormProps) {
     const [open, setOpen] = useState(false)
 
     const defaultValues = useMemo<BankFormValues>(
@@ -60,16 +61,20 @@ export default function BankForm({ bank, trigger }: BankFormProps) {
         reset(defaultValues)
     }, [defaultValues, reset])
 
-    const onSubmit = async (values: BankFormValues) => {
-        if (bank) {
+    const onSubmit = async (data: BankFormValues) => {
+        if (data) {
         // updateBank(bank.id, values)
-        setOpen(false)
-        return
+            setOpen(false)
+            return
         }
+
+        onSave(data);
 
         // addBank(values.code, values.name)
         setOpen(false)
         reset({ code: "", name: "" })
+
+        toast.success(bank ? "Banco atualizado com sucesso!" : "Banco cadastrado com sucesso!");
     }
 
     const handleOpenChange = (nextOpen: boolean) => {
@@ -110,6 +115,7 @@ export default function BankForm({ bank, trigger }: BankFormProps) {
                                     id="code"
                                     aria-invalid={fieldState.invalid}
                                     placeholder="Ex: 001"
+                                    maxLength={6}
                                 />
                                 {fieldState.invalid && (
                                     <FieldError errors={[fieldState.error]} />

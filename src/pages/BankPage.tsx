@@ -5,6 +5,7 @@ import { BankPagination } from "@/components/bank/BankPagination";
 import { Button } from "@/components/ui/button";
 import { useBank } from "@/hooks/useBank";
 import type { Bank } from "@/types/bank/Bank";
+import type { BankRequest } from "@/types/bank/BankRequest";
 import { Plus } from "lucide-react";
 
 export default function Banks() {
@@ -18,7 +19,14 @@ export default function Banks() {
     clearFilters,
     changePage,
     changeSorting,
+    createBank,
+    refetch
   } = useBank();
+
+  async function handleSubmit(payload: BankRequest) {
+    await createBank(payload);
+    await refetch();
+  }
 
   function handleEdit(bank: Bank) {
     console.log("Editar:", bank);
@@ -45,6 +53,7 @@ export default function Banks() {
                 Adicionar Banco
               </Button>
             }
+            onSave={handleSubmit}
           />
         </div>
       </div>
