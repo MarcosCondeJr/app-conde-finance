@@ -44,6 +44,7 @@ export function useBank() {
     try {
       await bankService.saveBank(payload);
       await fetchBanks();
+      clearFilters();
     } catch (err) {
       console.error("Erro ao cadastrar banco:", err);
       throw err;
@@ -55,6 +56,7 @@ export function useBank() {
       try {
         await bankService.editBank(id, payload);
         await fetchBanks();
+        clearFilters();
       } catch (err) {
         console.error("Erro ao editar banco:", err);
         throw err;
@@ -66,6 +68,7 @@ export function useBank() {
     try {
       await bankService.deleteBank(id);
       await fetchBanks();
+      clearFilters();
     } catch (err) {
       console.error("Erro ao remover banco:", err);
       throw err;

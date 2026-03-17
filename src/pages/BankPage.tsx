@@ -2,16 +2,22 @@ import { BankFiltersForm } from "@/components/bank/BankFiltersForm";
 import BankForm from "@/components/bank/BankForm";
 import { BankList } from "@/components/bank/BankList";
 import { BankPagination } from "@/components/bank/BankPagination";
+import DeleteConfirmDialog from "@/components/common/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { useBank } from "@/hooks/useBank";
 import type { Bank } from "@/types/bank/Bank";
 import type { BankRequest } from "@/types/bank/BankRequest";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Banks() {
   const [openForm, setOpenForm] = useState(false);
   const [selectedBank, setSelectedBank] = useState<Bank | undefined>(undefined);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [bankToDelete, setBankToDelete] = useState<Bank | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const {
     banks,
@@ -25,7 +31,7 @@ export default function Banks() {
     changeSorting,
     createBank,
     updateBank,
-    removeBank
+    removeBank,
   } = useBank();
 
   function handleOpenCreate() {
@@ -40,17 +46,31 @@ export default function Banks() {
 
   async function handleSubmit(payload: BankRequest) {
     await createBank(payload);
-    clearFilters();
   }
 
-  async function handleEdit(id:string, payload: Partial<BankRequest>) {
+  async function handleEdit(id: string, payload: Partial<BankRequest>) {
     await updateBank(id, payload);
-    clearFilters();
   }
 
-  async function handleDelete(id: string) {
-    await removeBank(id);
-    clearFilters();
+  function handleDelete(bank: Bank) {
+    setBankToDelete(bank);
+    setOpenDeleteDialog(true);
+  }
+
+  async function confirmDelete() {
+    if (!bankToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      await removeBank(bankToDelete.id);
+      toast.success("Banco excluído com sucesso!");
+      setOpenDeleteDialog(false);
+      setBankToDelete(null);
+    } catch (error) {
+      toast.error("Erro ao excluir banco.");
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   return (
@@ -99,6 +119,21 @@ export default function Banks() {
         totalPages={totalPages}
         totalElements={totalElements}
         onPageChange={changePage}
+      />
+
+      <DeleteConfirmDialog
+        open={openDeleteDialog}
+        onOpenChange={(openDelete) => {
+          setOpenDeleteDialog(openDelete);
+
+          if (!openDelete) {
+            setBankToDelete(null);
+          }
+        }}
+        onConfirm={confirmDelete}
+        title="Excluir banco"
+        itemName={bankToDelete?.name}
+        isLoading={isDeleting}
       />
     </div>
   );
