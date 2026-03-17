@@ -15,8 +15,6 @@ export const bankService = {
       params.append("active", String(filters.active));
     }
 
-    console.log(filters)
-
     params.append("page", String(filters.page));
     params.append("size", String(filters.size));
     params.append("sort", `${filters.sort},${filters.direction}`);
