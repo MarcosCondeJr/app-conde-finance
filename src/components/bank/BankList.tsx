@@ -16,7 +16,7 @@ type BankTableProps = {
   direction: "asc" | "desc";
   onSort: (field: string) => void;
   onEdit?: (bank: Bank) => void;
-  onDelete?: (bank: Bank) => void;
+  onDelete?: (id: string) => void;
 };
 export function BankList({
   data,
@@ -95,7 +95,7 @@ export function BankList({
                       type="button"
                       variant="destructive"
                       size="sm"
-                      onClick={() => onDelete?.(bank)}
+                      onClick={() => onDelete?.(bank.id)}
                     >
                       Excluir
                     </Button>

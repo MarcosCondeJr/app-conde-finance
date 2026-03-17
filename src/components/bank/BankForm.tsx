@@ -12,7 +12,7 @@ import { Button } from "../ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import type { BankFormProps } from "@/types/bank/BankFormProps";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -22,11 +22,16 @@ import type { ApiError } from "@/types/api/ApiError";
 import { Spinner } from "../ui/spinner";
 import { bankSchema } from "@/schemas/bank/bank.schema";
 
-export default function BankForm({ bank, trigger, onSave }: BankFormProps) {
-  const [open, setOpen] = useState(false);
+export default function BankForm({
+  open,
+  onOpenChange,
+  bank,
+  onSave,
+  onEdit,
+}: BankFormProps) {
 
   const defaultValues = useMemo<BankRequest>(
-    () => ({
+      () => ({
       code: bank?.code ?? "",
       name: bank?.name ?? "",
     }),
@@ -52,15 +57,15 @@ export default function BankForm({ bank, trigger, onSave }: BankFormProps) {
   const onSubmit = async (data: BankRequest) => {
     try {
       if (bank) {
-        // updateBank(bank.id, values)
+        await onEdit(bank.id, data);
         toast.success("Banco atualizado com sucesso!");
-        setOpen(false);
+        onOpenChange(false);
         return;
       }
       await onSave(data);
 
       toast.success("Banco cadastrado com sucesso!");
-      setOpen(false);
+      onOpenChange(false);
       reset({ code: "", name: "" });
     } catch (err) {
       applyErrors(err as ApiError, setError);
@@ -68,7 +73,7 @@ export default function BankForm({ bank, trigger, onSave }: BankFormProps) {
   };
 
   const handleOpenChange = (nextOpen: boolean) => {
-    setOpen(nextOpen);
+    onOpenChange(nextOpen);
 
     if (!nextOpen && !bank) {
       reset({ code: "", name: "" });
@@ -77,10 +82,6 @@ export default function BankForm({ bank, trigger, onSave }: BankFormProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        {trigger || <Button>Adicionar Banco</Button>}
-      </DialogTrigger>
-
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>{bank ? "Editar Banco" : "Cadastrar Banco"}</DialogTitle>

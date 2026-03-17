@@ -43,6 +43,7 @@ export function useBank() {
   const createBank = useCallback(async (payload: BankRequest) => {
     try {
       await bankService.saveBank(payload);
+      await fetchBanks();
     } catch (err) {
       console.error("Erro ao cadastrar banco:", err);
       throw err;
@@ -57,19 +58,17 @@ export function useBank() {
       } catch (err) {
         console.error("Erro ao editar banco:", err);
         throw err;
-      } finally {
       }
-    },
-    [fetchBanks],
+    },[],
   );
 
   const removeBank = useCallback(async (id: string) => {
     try {
       await bankService.deleteBank(id);
+      await fetchBanks();
     } catch (err) {
       console.error("Erro ao remover banco:", err);
       throw err;
-    } finally {
     }
   }, []);
 

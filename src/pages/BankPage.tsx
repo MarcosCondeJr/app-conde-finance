@@ -7,9 +7,13 @@ import { useBank } from "@/hooks/useBank";
 import type { Bank } from "@/types/bank/Bank";
 import type { BankRequest } from "@/types/bank/BankRequest";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 export default function Banks() {
-    const {
+  const [openForm, setOpenForm] = useState(false);
+  const [selectedBank, setSelectedBank] = useState<Bank | undefined>(undefined);
+
+  const {
     banks,
     filters,
     totalPages,
@@ -20,20 +24,33 @@ export default function Banks() {
     changePage,
     changeSorting,
     createBank,
-    refetch
+    updateBank,
+    removeBank
   } = useBank();
+
+  function handleOpenCreate() {
+    setSelectedBank(undefined);
+    setOpenForm(true);
+  }
+
+  function handleOpenEdit(bank: Bank) {
+    setSelectedBank(bank);
+    setOpenForm(true);
+  }
 
   async function handleSubmit(payload: BankRequest) {
     await createBank(payload);
-    await refetch();
+    clearFilters();
   }
 
-  function handleEdit(bank: Bank) {
-    console.log("Editar:", bank);
+  async function handleEdit(id:string, payload: Partial<BankRequest>) {
+    await updateBank(id, payload);
+    clearFilters();
   }
 
-  function handleDelete(bank: Bank) {
-    console.log("Excluir:", bank);
+  async function handleDelete(id: string) {
+    await removeBank(id);
+    clearFilters();
   }
 
   return (
@@ -46,17 +63,20 @@ export default function Banks() {
           </p>
         </div>
         <div>
-          <BankForm
-            trigger={
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Adicionar Banco
-              </Button>
-            }
-            onSave={handleSubmit}
-          />
+          <Button onClick={handleOpenCreate}>
+            <Plus className="mr-2 h-4 w-4" />
+            Adicionar Banco
+          </Button>
         </div>
       </div>
+
+      <BankForm
+        open={openForm}
+        onOpenChange={setOpenForm}
+        bank={selectedBank}
+        onSave={handleSubmit}
+        onEdit={handleEdit}
+      />
 
       <BankFiltersForm
         filters={filters}
@@ -70,7 +90,7 @@ export default function Banks() {
         sortBy={filters.sort}
         direction={filters.direction}
         onSort={changeSorting}
-        onEdit={handleEdit}
+        onEdit={handleOpenEdit}
         onDelete={handleDelete}
       />
 
