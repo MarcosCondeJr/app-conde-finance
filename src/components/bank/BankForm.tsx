@@ -7,156 +7,145 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import type { BankFormProps } from "@/types/bank/BankFormProps";
-import { useEffect, useMemo, useState } from "react"
-import { z } from "zod"
-import { Controller, useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect, useMemo, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
-const bankSchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, "O código é obrigatório")
-    .max(3, "Código muito longo")
-    .regex(/^\d+$/, "O código deve conter apenas números"),
-  name: z
-    .string()
-    .trim()
-    .min(2, "O nome é obrigatório")
-    .max(120, "Nome muito longo"),
-})
-
-type BankFormValues = z.infer<typeof bankSchema>
+import type { BankRequest } from "@/types/bank/BankRequest";
+import { applyErrors } from "@/utils/applyErrors";
+import type { ApiError } from "@/types/api/ApiError";
+import { Spinner } from "../ui/spinner";
+import { bankSchema } from "@/schemas/bank/bank.schema";
 
 export default function BankForm({ bank, trigger, onSave }: BankFormProps) {
-    const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
-    const defaultValues = useMemo<BankFormValues>(
-        () => ({
-            code: bank?.code ?? "",
-            name: bank?.name ?? "",
-        }),
-        [bank]
-    )
+  const defaultValues = useMemo<BankRequest>(
+    () => ({
+      code: bank?.code ?? "",
+      name: bank?.name ?? "",
+    }),
+    [bank],
+  );
 
-    const form = useForm<BankFormValues>({
-        resolver: zodResolver(bankSchema),
-        defaultValues,
-        mode: "onSubmit", 
-    })
+  const {
+    handleSubmit,
+    reset,
+    setError,
+    control,
+    formState: { isSubmitting },
+  } = useForm<BankRequest>({
+    resolver: zodResolver(bankSchema),
+    defaultValues,
+    mode: "onSubmit",
+  });
 
-    const {
-        handleSubmit,
-        reset,
-        formState: { isSubmitting },
-    } = form
-    
-    useEffect(() => {
-        reset(defaultValues)
-    }, [defaultValues, reset])
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
-    const onSubmit = async (data: BankFormValues) => {
-        if (data) {
+  const onSubmit = async (data: BankRequest) => {
+    try {
+      if (bank) {
         // updateBank(bank.id, values)
-            setOpen(false)
-            return
-        }
+        toast.success("Banco atualizado com sucesso!");
+        setOpen(false);
+        return;
+      }
+      await onSave(data);
 
-        onSave(data);
-
-        // addBank(values.code, values.name)
-        setOpen(false)
-        reset({ code: "", name: "" })
-
-        toast.success(bank ? "Banco atualizado com sucesso!" : "Banco cadastrado com sucesso!");
+      toast.success("Banco cadastrado com sucesso!");
+      setOpen(false);
+      reset({ code: "", name: "" });
+    } catch (err) {
+      applyErrors(err as ApiError, setError);
     }
+  };
 
-    const handleOpenChange = (nextOpen: boolean) => {
-        setOpen(nextOpen)
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
 
-        if (!nextOpen && !bank) {
-            reset({ code: "", name: "" })
-        }
+    if (!nextOpen && !bank) {
+      reset({ code: "", name: "" });
     }
+  };
 
-    return (
-        <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogTrigger asChild>
-                {trigger || <Button>Adicionar Banco</Button>}
-            </DialogTrigger>
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        {trigger || <Button>Adicionar Banco</Button>}
+      </DialogTrigger>
 
-            <DialogContent className="sm:max-w-sm">
-                <DialogHeader>
-                    <DialogTitle>{bank ? "Editar Banco" : "Cadastrar Banco"}</DialogTitle>
-                    <DialogDescription>
-                        {bank ? "Atualizar informações bancárias": "Crie um novo banco "}
-                    </DialogDescription>
-                </DialogHeader>
+      <DialogContent className="sm:max-w-sm">
+        <DialogHeader>
+          <DialogTitle>{bank ? "Editar Banco" : "Cadastrar Banco"}</DialogTitle>
+          <DialogDescription>
+            {bank ? "Atualizar informações bancárias" : "Crie um novo banco "}
+          </DialogDescription>
+        </DialogHeader>
 
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                    <FieldGroup>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <FieldGroup>
+            <Controller
+              name="code"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="code">Código</FieldLabel>
+                  <Input
+                    {...field}
+                    id="code"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Ex: 001"
+                    maxLength={3}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
-                        <Controller
-                            name="code"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor="code">
-                                    Código
-                                </FieldLabel>
-                                <Input
-                                    {...field}
-                                    id="code"
-                                    aria-invalid={fieldState.invalid}
-                                    placeholder="Ex: 001"
-                                    maxLength={6}
-                                />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                                </Field>
-                            )}
-                        />
-
-                        <Controller
-                            name="name"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor="name">
-                                    Nome
-                                </FieldLabel>
-                                <Input
-                                    {...field}
-                                    id="name"
-                                    aria-invalid={fieldState.invalid}
-                                    placeholder="Ex: Banco do Brasil S.A."
-                                />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                                </Field>
-                            )}
-                        />
-                    </FieldGroup>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                        <Button type="button" variant="outline" onClick={() => form.reset()}>
-                            Cancelar
-                        </Button>
-                        </DialogClose>
-                        <Button type="submit">
-                            Salvar
-                        </Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
+            <Controller
+              name="name"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="name">Nome</FieldLabel>
+                  <Input
+                    {...field}
+                    id="name"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Ex: Banco do Brasil S.A."
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+          <DialogFooter>
+            <DialogClose asChild>
+              {!isSubmitting ? (
+                <Button type="button" variant="outline" onClick={() => reset()}>
+                  Cancelar
+                </Button>
+              ) : (
+                ""
+              )}
+            </DialogClose>
+            <Button disabled={isSubmitting} type="submit">
+              {isSubmitting ? <Spinner /> : "Salvar"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
 }

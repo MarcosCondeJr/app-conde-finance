@@ -46,8 +46,7 @@ export function useBank() {
     } catch (err) {
       console.error("Erro ao cadastrar banco:", err);
       throw err;
-    } finally {
-    }
+    } 
   }, []);
 
   const updateBank = useCallback(
