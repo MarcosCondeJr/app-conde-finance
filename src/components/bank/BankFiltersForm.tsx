@@ -28,23 +28,22 @@ export function BankFiltersForm({ filters, onChange, onClear }: BankFiltersProps
         onChange={(e) => onChange("name", e.target.value)}
       />
 
-      <Select onValueChange={(value) => {
-          onChange(
-            "active",
-            value === "" ? "" : value === "true"
-          );
-        }}>
+      <Select 
+        value={filters.active === "" ? "all" : String(filters.active)}
+        onValueChange={(value) => {
+          onChange("active", value === "all" ? "" : value === "true");
+        }}
+      >
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Status"/>
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
+            <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="true">Ativo</SelectItem>
             <SelectItem value="false">Inativo</SelectItem>
           </SelectGroup>
         </SelectContent>
-        {/* value={String(filters.active)}
-         */}
       </Select>
 
       <div className="flex gap-2">

@@ -21,29 +21,35 @@ export function useBank() {
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchBanks = useCallback(async () => {
-    try {
-      setIsLoading(true);
+  useEffect(() => {
+    console.log("Banks montou");
+    return () => console.log("Banks desmontou");
 
-      const response = await bankService.getBanks(filters);
+    async function loadBanks() {
+      try {
+        setIsLoading(true);
 
-      setBanks(response.content);
-      setTotalPages(response.page.totalPages);
-      setTotalElements(response.page.totalElements);
-    } catch (err) {
-      console.error("Erro ao buscar bancos:", err);
-      setBanks([]);
-      setTotalPages(0);
-      setTotalElements(0);
-    } finally {
-      setIsLoading(false);
+        const response = await bankService.getBanks(filters);
+
+        setBanks(response.content);
+        setTotalPages(response.page.totalPages);
+        setTotalElements(response.page.totalElements);
+      } catch (err) {
+        console.error("Erro ao buscar bancos:", err);
+        setBanks([]);
+        setTotalPages(0);
+        setTotalElements(0);
+      } finally {
+        setIsLoading(false);
+      }
     }
+
+    loadBanks();
   }, [filters]);
 
   const createBank = useCallback(async (payload: BankRequest) => {
     try {
       await bankService.saveBank(payload);
-      await fetchBanks();
       clearFilters();
     } catch (err) {
       console.error("Erro ao cadastrar banco:", err);
@@ -55,7 +61,6 @@ export function useBank() {
     async (id: string, payload: Partial<BankRequest>) => {
       try {
         await bankService.editBank(id, payload);
-        await fetchBanks();
         clearFilters();
       } catch (err) {
         console.error("Erro ao editar banco:", err);
@@ -67,7 +72,6 @@ export function useBank() {
   const removeBank = useCallback(async (id: string) => {
     try {
       await bankService.deleteBank(id);
-      await fetchBanks();
       clearFilters();
     } catch (err) {
       console.error("Erro ao remover banco:", err);
@@ -111,10 +115,6 @@ export function useBank() {
     }));
   }
 
-  useEffect(() => {
-    fetchBanks();
-  }, [fetchBanks]);
-
   return {
     banks,
     filters,
@@ -125,8 +125,6 @@ export function useBank() {
     clearFilters,
     changePage,
     changeSorting,
-    refetch: fetchBanks,
-    fetchBanks,
     createBank,
     updateBank,
     removeBank,

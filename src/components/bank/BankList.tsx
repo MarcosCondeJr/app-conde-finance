@@ -1,4 +1,5 @@
 import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
 import {
   Table,
   TableBody,
@@ -64,13 +65,13 @@ export function BankList({
         <TableBody>
           {isLoading ? (
             <TableRow>
-              <TableCell colSpan={3} className="text-center">
-                Carregando...
+              <TableCell colSpan={4} className="flex items-center">
+                <Spinner />
               </TableCell>
             </TableRow>
           ) : data.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={3} className="text-center">
+              <TableCell colSpan={4} className="text-center">
                 Nenhum banco encontrado.
               </TableCell>
             </TableRow>
