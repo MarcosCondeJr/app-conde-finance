@@ -22,9 +22,6 @@ export function useBank() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Banks montou");
-    return () => console.log("Banks desmontou");
-
     async function loadBanks() {
       try {
         setIsLoading(true);
