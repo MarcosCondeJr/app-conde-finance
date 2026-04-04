@@ -1,6 +1,6 @@
 import type { Bank } from "./Bank";
 
-export type BankListResponse = {
+export interface BankListResponse {
   content: Bank[];
   page: {
     size: number;

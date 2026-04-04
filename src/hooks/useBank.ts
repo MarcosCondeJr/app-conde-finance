@@ -1,8 +1,10 @@
 import { bankService } from "@/services/bank.service";
-import type { Bank } from "@/types/bank/Bank";
 import type { BankRequest } from "@/types/bank/BankRequest";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import type { BankFilters } from "@/types/bank/BankFilters";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import type { BankListResponse } from "@/types/bank/BankListResponse";
 
 const initialFilters: BankFilters = {
   name: "",
@@ -15,113 +17,108 @@ const initialFilters: BankFilters = {
 };
 
 export function useBank() {
-  const [banks, setBanks] = useState<Bank[]>([]);
-  const [filters, setFilters] = useState<BankFilters>(initialFilters);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalElements, setTotalElements] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchParams] = useSearchParams();
 
-  useEffect(() => {
-    async function loadBanks() {
-      try {
-        setIsLoading(true);
+  const pageParam = Number(searchParams.get("page") || "1");
+  const page = Math.max(pageParam - 1, 0);
 
-        const response = await bankService.getBanks(filters);
+  const filters = {
+    ...initialFilters,
+    page,
+  };
 
-        setBanks(response.content);
-        setTotalPages(response.page.totalPages);
-        setTotalElements(response.page.totalElements);
-      } catch (err) {
-        console.error("Erro ao buscar bancos:", err);
-        setBanks([]);
-        setTotalPages(0);
-        setTotalElements(0);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+  const { data, isLoading } = useQuery<BankListResponse>({
+    queryKey: ["get-banks", filters],
+    queryFn: async () => {
+      const response = await bankService.getBanks(filters);
 
-    loadBanks();
-  }, [filters]);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      return response;
+    },
+    placeholderData: keepPreviousData,
+  });
 
   const createBank = useCallback(async (payload: BankRequest) => {
     try {
       await bankService.saveBank(payload);
-      clearFilters();
+      // clearFilters();
     } catch (err) {
       console.error("Erro ao cadastrar banco:", err);
       throw err;
-    } 
+    }
   }, []);
 
   const updateBank = useCallback(
     async (id: string, payload: Partial<BankRequest>) => {
       try {
         await bankService.editBank(id, payload);
-        clearFilters();
+        // clearFilters();
       } catch (err) {
         console.error("Erro ao editar banco:", err);
         throw err;
       }
-    },[],
+    },
+    [],
   );
 
   const removeBank = useCallback(async (id: string) => {
     try {
       await bankService.deleteBank(id);
-      clearFilters();
+      // clearFilters();
     } catch (err) {
       console.error("Erro ao remover banco:", err);
       throw err;
     }
   }, []);
 
-  function clearFilters() {
-    setFilters(initialFilters);
-  }
+  // function clearFilters() {
+  //   updateSearchParams(initialFilters);
+  // }
 
-  function changePage(page: number) {
-    setFilters((prev) => ({
-      ...prev,
-      page,
-    }));
-  }
+  // function changePage(page: number) {
+  //   updateSearchParams({
+  //     ...filters,
+  //     page,
+  //   });
+  // }
 
-  function changeSorting(sort: string) {
-    setFilters((prev) => ({
-      ...prev,
-      page: 0,
-      sort,
-      direction:
-        prev.sort === sort
-          ? prev.direction === "asc"
-            ? "desc"
-            : "asc"
-          : "asc",
-    }));
-  }
+  // function changeSorting(sort: string) {
+  //   updateSearchParams({
+  //     ...filters,
+  //     page: 0,
+  //     sort,
+  //     direction:
+  //       filters.sort === sort
+  //         ? filters.direction === "asc"
+  //           ? "desc"
+  //           : "asc"
+  //         : "asc",
+  //   });
+  // }
 
-  function updateFilter<K extends keyof BankFilters>(
-    key: K,
-    value: BankFilters[K],
-  ) {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-      page: key === "page" ? Number(value) : 0,
-    }));
-  }
+  // function updateFilter<K extends keyof BankFilters>(
+  //   key: K,
+  //   value: BankFilters[K],
+  // ) {
+  //   updateSearchParams({
+  //     ...filters,
+  //     [key]: value,
+  //     page: key === "page" ? Number(value) : 0,
+  //   });
+  // }
 
   return {
-    banks,
-    filters,
-    totalPages,
-    totalElements,
+    banks: data?.content ?? [],
+    page: pageParam,
+    totalPages: data?.page.totalPages ?? 0,
+    totalElements: data?.page.totalElements ?? 0,
     isLoading,
-    updateFilter,
-    clearFilters,
-    changePage,
-    changeSorting,
+    // filters,
+    // isLoading,
+    // updateFilter,
+    // clearFilters,
+    // changeSorting,
     createBank,
     updateBank,
     removeBank,

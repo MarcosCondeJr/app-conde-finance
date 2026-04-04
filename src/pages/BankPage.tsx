@@ -21,14 +21,10 @@ export default function Banks() {
 
   const {
     banks,
-    filters,
+    page,
     totalPages,
     totalElements,
     isLoading,
-    updateFilter,
-    clearFilters,
-    changePage,
-    changeSorting,
     createBank,
     updateBank,
     removeBank,
@@ -98,28 +94,26 @@ export default function Banks() {
         onEdit={handleEdit}
       />
 
-      <BankFiltersForm
+      {/* <BankFiltersForm
         filters={filters}
         onChange={updateFilter}
         onClear={clearFilters}
-      />
+      /> */}
 
       <BankList
         data={banks}
         isLoading={isLoading}
-        sortBy={filters.sort}
-        direction={filters.direction}
-        onSort={changeSorting}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
       />
 
-      <BankPagination
-        page={filters.page}
-        totalPages={totalPages}
-        totalElements={totalElements}
-        onPageChange={changePage}
-      />
+      {banks && (
+        <BankPagination
+          page={page}
+          totalPages={totalPages}
+          totalElements={totalElements}
+        />
+      )}
 
       <DeleteConfirmDialog
         open={openDeleteDialog}

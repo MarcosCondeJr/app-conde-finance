@@ -13,48 +13,29 @@ import type { Bank } from "@/types/bank/Bank";
 type BankTableProps = {
   data: Bank[];
   isLoading: boolean;
-  sortBy: string;
-  direction: "asc" | "desc";
-  onSort: (field: string) => void;
   onEdit?: (bank: Bank) => void;
   onDelete?: (bank: Bank) => void;
 };
 export function BankList({
   data,
   isLoading,
-  sortBy,
-  direction,
-  onSort,
   onEdit,
   onDelete,
 }: BankTableProps) {
-  function renderSortIcon(field: string) {
-    if (sortBy !== field) return "↕";
-    return direction === "asc" ? "↑" : "↓";
-  }
-
   return (
     <div className="rounded-xl border">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>
-              <button
-                type="button"
-                className="flex items-center gap-1"
-                onClick={() => onSort("code")}
-              >
-                Código {renderSortIcon("code")}
+              <button type="button" className="flex items-center gap-1">
+                Código
               </button>
             </TableHead>
 
             <TableHead>
-              <button
-                type="button"
-                className="flex items-center gap-1"
-                onClick={() => onSort("name")}
-              >
-                Nome {renderSortIcon("name")}
+              <button type="button" className="flex items-center gap-1">
+                Nome
               </button>
             </TableHead>
             <TableHead>Status</TableHead>
