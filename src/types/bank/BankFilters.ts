@@ -5,5 +5,5 @@ export type BankFilters = {
   page: number;
   size: number;
   sort: string;
-  direction: "asc" | "desc";
+  direction: string | "asc" | "desc" ;
 };

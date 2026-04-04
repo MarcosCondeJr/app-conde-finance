@@ -22,9 +22,22 @@ export function useBank() {
   const pageParam = Number(searchParams.get("page") || "1");
   const page = Math.max(pageParam - 1, 0);
 
+  const size = Number(searchParams.get("size") || 10);
+  const sort = searchParams.get("sort") || "id";
+  const direction = searchParams.get("direction") || "asc";
+  const name = searchParams.get("name") || "";
+  const code = searchParams.get("code") || "";
+  // const active = searchParams.get("active") || "" ;
+
   const filters = {
     ...initialFilters,
     page,
+    size,
+    sort,
+    direction,
+    name,
+    code
+    // active,
   };
 
   const { data, isLoading } = useQuery<BankListResponse>({

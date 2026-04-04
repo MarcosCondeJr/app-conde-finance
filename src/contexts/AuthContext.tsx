@@ -73,10 +73,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       logout,
     }),
-    [user, isLoading],
+    [user, isLoading, isAuthenticated],
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

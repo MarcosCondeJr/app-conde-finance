@@ -38,5 +38,6 @@ export const router = createBrowserRouter([
         ]
     },
 
-    { path: "*", element: <Navigate to={PATHS.home} replace /> },
+    // { path: "*", element: <Navigate to={PATHS.home} replace /> },
+    { path: "*", element: <div>Rota não encontrada</div> },
 ])

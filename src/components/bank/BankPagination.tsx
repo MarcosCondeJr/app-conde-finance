@@ -18,8 +18,9 @@ export function BankPagination({
 
   function updatePage(newPage: number) {
     setSearchParams((params) => {
-      params.set("page", String(newPage));
-      return params;
+      const next = new URLSearchParams(params);
+      next.set("page", String(newPage));
+      return next;
     });
   }
 
@@ -29,22 +30,22 @@ export function BankPagination({
 
   function previousPage() {
     if (page <= 1) {
-      return
-    };
+      return;
+    }
     updatePage(page - 1);
   }
 
   function nextPage() {
     if (page >= totalPages) {
-      return
-    };
+      return;
+    }
     updatePage(page + 1);
   }
 
   function lastPage() {
     if (totalPages <= 0) {
-      return
-    };
+      return;
+    }
     updatePage(totalPages);
   }
 
@@ -77,15 +78,23 @@ export function BankPagination({
             <ChevronLeft className="size-4" />
             <span className="sr-only">Primeira página</span>
           </Button>
-          <Button size="icon" onClick={previousPage} disabled={page - 1 < 0} >
+          <Button size="icon" onClick={previousPage} disabled={page - 1 < 0}>
             <ChevronLeft className="size-4" />
             <span className="sr-only">Anterior</span>
           </Button>
-          <Button size="icon" onClick={nextPage} disabled={page + 1 >= totalPages} >
+          <Button
+            size="icon"
+            onClick={nextPage}
+            disabled={page >= totalPages}
+          >
             <ChevronRight className="size-4" />
             <span className="sr-only">Próxima</span>
           </Button>
-          <Button size="icon" onClick={lastPage}  disabled={page + 1 >= totalPages}>
+          <Button
+            size="icon"
+            onClick={lastPage}
+            disabled={page >= totalPages}
+          >
             <ChevronRight className="size-4" />
             <span className="sr-only">Ultima página</span>
           </Button>
