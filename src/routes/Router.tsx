@@ -10,6 +10,7 @@ import Accounts from "../pages/Accounts";
 import Categories from "../pages/Categories";
 import Transactions from "../pages/Transactions";
 import Register from "@/pages/Register";
+import NotFoundPage from "@/pages/NotFoundPage";
 
 export const router = createBrowserRouter([
     { path: "/", element: <Navigate to={PATHS.home} replace /> },
@@ -38,6 +39,5 @@ export const router = createBrowserRouter([
         ]
     },
 
-    // { path: "*", element: <Navigate to={PATHS.home} replace /> },
-    { path: "*", element: <div>Rota não encontrada</div> },
+    { path: "*", element: <NotFoundPage />},
 ])
