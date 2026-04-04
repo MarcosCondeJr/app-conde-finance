@@ -5,12 +5,12 @@ import AuthLayout from "../components/layout/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import { Layout } from "../components/layout/Layout";
 import Dashboard from "../pages/Dashboard";
-import Banks from "../pages/BankPage";
 import Accounts from "../pages/Accounts";
 import Categories from "../pages/Categories";
 import Transactions from "../pages/Transactions";
 import Register from "@/pages/Register";
 import NotFoundPage from "@/pages/NotFoundPage";
+import BanksPage from "@/pages/BankPage";
 
 export const router = createBrowserRouter([
     { path: "/", element: <Navigate to={PATHS.home} replace /> },
@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
                 element: <Layout />,
                 children: [
                     { path: PATHS.home, element: <Dashboard /> },
-                    { path: PATHS.banks, element: <Banks /> },
+                    { path: PATHS.banks, element: <BanksPage /> },
                     { path: PATHS.accounts, element: <Accounts /> },
                     { path: PATHS.categories, element: <Categories /> },
                     { path: PATHS.transactions, element: <Transactions /> },

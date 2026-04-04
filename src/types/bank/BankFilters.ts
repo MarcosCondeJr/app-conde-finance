@@ -1,7 +1,7 @@
 export type BankFilters = {
   name: string;
   code: string;
-  active?: boolean | "";
+  active?: string | boolean | "";
   page: number;
   size: number;
   sort: string;

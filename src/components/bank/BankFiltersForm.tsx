@@ -1,19 +1,40 @@
 import type { BankFilters } from "@/types/bank/BankFilters";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { Eraser } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 type BankFiltersProps = {
   filters: BankFilters;
-  onChange: <K extends keyof BankFilters>(
-    key: K,
-    value: BankFilters[K]
-  ) => void;
   onClear: () => void;
 };
 
-export function BankFiltersForm({ filters, onChange, onClear }: BankFiltersProps) {
+export function BankFiltersForm({ filters, onClear }: BankFiltersProps) {
+  const [, setSearchParams] = useSearchParams();
+
+  async function onChange(parameter: string, value: string | boolean) {
+    setSearchParams((params) => {
+      const next = new URLSearchParams(params);
+
+      if (value === "" || value === null || value === undefined) {
+        next.delete(parameter);
+      } else {
+        next.set(parameter, String(value));
+      }
+
+      next.set("page", "1"); 
+      return next;
+    });
+  }
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <Input
@@ -28,21 +49,19 @@ export function BankFiltersForm({ filters, onChange, onClear }: BankFiltersProps
         onChange={(e) => onChange("name", e.target.value)}
       />
 
-      <Select 
-        value={filters.active === "" ? "all" : String(filters.active)}
+      <Select
+        defaultValue={filters.active === "" ? "all" : String(filters.active)}
         onValueChange={(value) => {
           onChange("active", value === "all" ? "" : value === "true");
         }}
       >
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="Status"/>
+          <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
-          <SelectGroup>
             <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="true">Ativo</SelectItem>
             <SelectItem value="false">Inativo</SelectItem>
-          </SelectGroup>
         </SelectContent>
       </Select>
 

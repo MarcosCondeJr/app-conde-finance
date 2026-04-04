@@ -1,6 +1,6 @@
 import { bankService } from "@/services/bank.service";
 import type { BankRequest } from "@/types/bank/BankRequest";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { BankFilters } from "@/types/bank/BankFilters";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -17,27 +17,23 @@ const initialFilters: BankFilters = {
 };
 
 export function useBank() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const pageParam = Number(searchParams.get("page") || "1");
   const page = Math.max(pageParam - 1, 0);
 
   const size = Number(searchParams.get("size") || 10);
-  const sort = searchParams.get("sort") || "id";
-  const direction = searchParams.get("direction") || "asc";
   const name = searchParams.get("name") || "";
   const code = searchParams.get("code") || "";
-  // const active = searchParams.get("active") || "" ;
+  const active = searchParams.get("active") || "" ;
 
   const filters = {
     ...initialFilters,
     page,
     size,
-    sort,
-    direction,
     name,
-    code
-    // active,
+    code,
+    active
   };
 
   const { data, isLoading } = useQuery<BankListResponse>({
@@ -85,16 +81,16 @@ export function useBank() {
     }
   }, []);
 
-  // function clearFilters() {
-  //   updateSearchParams(initialFilters);
-  // }
-
-  // function changePage(page: number) {
-  //   updateSearchParams({
-  //     ...filters,
-  //     page,
-  //   });
-  // }
+  function clearFilters() {
+    setSearchParams((params) => {
+      const next = new URLSearchParams(params);
+      next.delete("code");
+      next.delete("name");
+      next.delete("active");
+      next.set("page", "1");
+      return next;
+    });
+  }
 
   // function changeSorting(sort: string) {
   //   updateSearchParams({
@@ -127,10 +123,10 @@ export function useBank() {
     totalPages: data?.page.totalPages ?? 0,
     totalElements: data?.page.totalElements ?? 0,
     isLoading,
-    // filters,
+    filters,
     // isLoading,
     // updateFilter,
-    // clearFilters,
+    clearFilters,
     // changeSorting,
     createBank,
     updateBank,

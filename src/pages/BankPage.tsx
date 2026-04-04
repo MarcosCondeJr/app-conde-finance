@@ -11,7 +11,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export default function Banks() {
+export default function BanksPage() {
   const [openForm, setOpenForm] = useState(false);
   const [selectedBank, setSelectedBank] = useState<Bank | undefined>(undefined);
 
@@ -25,6 +25,8 @@ export default function Banks() {
     totalPages,
     totalElements,
     isLoading,
+    filters,
+    clearFilters,
     createBank,
     updateBank,
     removeBank,
@@ -94,11 +96,10 @@ export default function Banks() {
         onEdit={handleEdit}
       />
 
-      {/* <BankFiltersForm
+      <BankFiltersForm
         filters={filters}
-        onChange={updateFilter}
         onClear={clearFilters}
-      /> */}
+      />
 
       <BankList
         data={banks}
