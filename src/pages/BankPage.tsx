@@ -47,7 +47,7 @@ export default function BanksPage() {
   }
 
   async function handleEdit(id: string, payload: Partial<BankRequest>) {
-    await updateBank(id, payload);
+    await updateBank({id, payload});
   }
 
   function handleDelete(bank: Bank) {

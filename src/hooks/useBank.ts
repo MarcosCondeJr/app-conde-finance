@@ -1,9 +1,13 @@
 import { bankService } from "@/services/bank.service";
 import type { BankRequest } from "@/types/bank/BankRequest";
-import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { BankFilters } from "@/types/bank/BankFilters";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type { BankListResponse } from "@/types/bank/BankListResponse";
 
 const initialFilters: BankFilters = {
@@ -17,6 +21,8 @@ const initialFilters: BankFilters = {
 };
 
 export function useBank() {
+  const queryClient = useQueryClient();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const pageParam = Number(searchParams.get("page") || "1");
@@ -25,7 +31,7 @@ export function useBank() {
   const size = Number(searchParams.get("size") || 10);
   const name = searchParams.get("name") || "";
   const code = searchParams.get("code") || "";
-  const active = searchParams.get("active") || "" ;
+  const active = searchParams.get("active") || "";
 
   const filters = {
     ...initialFilters,
@@ -33,7 +39,7 @@ export function useBank() {
     size,
     name,
     code,
-    active
+    active,
   };
 
   const { data, isLoading } = useQuery<BankListResponse>({
@@ -48,38 +54,47 @@ export function useBank() {
     placeholderData: keepPreviousData,
   });
 
-  const createBank = useCallback(async (payload: BankRequest) => {
-    try {
-      await bankService.saveBank(payload);
-      // clearFilters();
-    } catch (err) {
-      console.error("Erro ao cadastrar banco:", err);
-      throw err;
-    }
-  }, []);
-
-  const updateBank = useCallback(
-    async (id: string, payload: Partial<BankRequest>) => {
-      try {
-        await bankService.editBank(id, payload);
-        // clearFilters();
-      } catch (err) {
-        console.error("Erro ao editar banco:", err);
-        throw err;
-      }
+  const createBank = useMutation({
+    mutationFn: async (payload: BankRequest) => {
+      return await bankService.saveBank(payload);
     },
-    [],
-  );
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["get-banks"] });
+    },
+    onError: (error) => {
+      console.log("Erro ao cadastrar banco:", error);
+    },
+  });
 
-  const removeBank = useCallback(async (id: string) => {
-    try {
-      await bankService.deleteBank(id);
-      // clearFilters();
-    } catch (err) {
+  const updateBank = useMutation({
+    mutationFn: async ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: Partial<BankRequest>;
+    }) => {
+      return await bankService.editBank(id, payload);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["get-banks"] });
+    },
+    onError: (err) => {
+      console.error("Erro ao editar banco:", err);
+    },
+  });
+
+  const removeBank = useMutation({
+    mutationFn: async (id: string) => {
+      return await bankService.deleteBank(id);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["get-banks"] });
+    },
+    onError: (err) => {
       console.error("Erro ao remover banco:", err);
-      throw err;
-    }
-  }, []);
+    },
+  });
 
   function clearFilters() {
     setSearchParams((params) => {
@@ -92,31 +107,6 @@ export function useBank() {
     });
   }
 
-  // function changeSorting(sort: string) {
-  //   updateSearchParams({
-  //     ...filters,
-  //     page: 0,
-  //     sort,
-  //     direction:
-  //       filters.sort === sort
-  //         ? filters.direction === "asc"
-  //           ? "desc"
-  //           : "asc"
-  //         : "asc",
-  //   });
-  // }
-
-  // function updateFilter<K extends keyof BankFilters>(
-  //   key: K,
-  //   value: BankFilters[K],
-  // ) {
-  //   updateSearchParams({
-  //     ...filters,
-  //     [key]: value,
-  //     page: key === "page" ? Number(value) : 0,
-  //   });
-  // }
-
   return {
     banks: data?.content ?? [],
     page: pageParam,
@@ -124,12 +114,9 @@ export function useBank() {
     totalElements: data?.page.totalElements ?? 0,
     isLoading,
     filters,
-    // isLoading,
-    // updateFilter,
     clearFilters,
-    // changeSorting,
-    createBank,
-    updateBank,
-    removeBank,
+    createBank: createBank.mutateAsync,
+    updateBank: updateBank.mutateAsync,
+    removeBank: removeBank.mutateAsync,
   };
 }

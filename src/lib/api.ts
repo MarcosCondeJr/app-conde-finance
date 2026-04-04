@@ -35,10 +35,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    // if (err.response?.status === 401) {
-    //   authStorage.clear();
-    //   window.location.href = PATHS.login;
-    // }
+    if (err.response?.status === 401) {
+      authStorage.clear();
+      window.location.href = PATHS.login;
+    }
 
     return Promise.reject(toApiError(err));
   },
