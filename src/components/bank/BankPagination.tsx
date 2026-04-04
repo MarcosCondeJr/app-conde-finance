@@ -1,7 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "react-router-dom";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 type BankPaginationProps = {
   page: number;
@@ -49,6 +55,14 @@ export function BankPagination({
     updatePage(totalPages);
   }
 
+  function setSize(size: string) {
+    setSearchParams((params) => {
+      const next = new URLSearchParams(params);
+      next.set("size", String(size));
+      return next;
+    });
+  }
+
   return (
     <div className="flex text-sm flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <span className="text-sm text-muted-foreground">
@@ -59,12 +73,14 @@ export function BankPagination({
         <div className="flex items-center gap-2">
           <span>Linhas por página</span>
 
-          <Select defaultValue="10">
-            <SelectTrigger aria-label="Página" />
-            <SelectContent>
-              <SelectItem value="10"></SelectItem>
-              <SelectItem value="15"></SelectItem>
-              <SelectItem value="20"></SelectItem>
+          <Select defaultValue="10" onValueChange={setSize}>
+            <SelectTrigger aria-label="Página">
+              <SelectValue placeholder="Página" />
+            </SelectTrigger>
+            <SelectContent onClick={() => setSize}>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="15">15</SelectItem>
+              <SelectItem value="20">20</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -75,27 +91,19 @@ export function BankPagination({
 
         <div className="space-x-1.5">
           <Button size="icon" onClick={firstPage} disabled={page - 1 < 0}>
-            <ChevronLeft className="size-4" />
+            <ChevronsLeft className="size-4" />
             <span className="sr-only">Primeira página</span>
           </Button>
           <Button size="icon" onClick={previousPage} disabled={page - 1 < 0}>
             <ChevronLeft className="size-4" />
             <span className="sr-only">Anterior</span>
           </Button>
-          <Button
-            size="icon"
-            onClick={nextPage}
-            disabled={page >= totalPages}
-          >
+          <Button size="icon" onClick={nextPage} disabled={page >= totalPages}>
             <ChevronRight className="size-4" />
             <span className="sr-only">Próxima</span>
           </Button>
-          <Button
-            size="icon"
-            onClick={lastPage}
-            disabled={page >= totalPages}
-          >
-            <ChevronRight className="size-4" />
+          <Button size="icon" onClick={lastPage} disabled={page >= totalPages}>
+            <ChevronsRight className="size-4" />
             <span className="sr-only">Ultima página</span>
           </Button>
         </div>
