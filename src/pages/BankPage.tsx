@@ -1,8 +1,8 @@
 import { BankFiltersForm } from "@/components/bank/BankFiltersForm";
 import BankForm from "@/components/bank/BankForm";
 import { BankList } from "@/components/bank/BankList";
-import { BankPagination } from "@/components/bank/BankPagination";
 import DeleteConfirmDialog from "@/components/common/DeleteConfirmDialog";
+import { Pagination } from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
 import { useBank } from "@/hooks/useBank";
 import type { Bank } from "@/types/bank/Bank";
@@ -109,7 +109,7 @@ export default function BanksPage() {
       />
 
       {banks && (
-        <BankPagination
+        <Pagination
           page={page}
           totalPages={totalPages}
           totalElements={totalElements}

@@ -8,18 +8,13 @@ import {
   SelectValue,
 } from "../ui/select";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import type { PaginationProps } from "@/types/pagination/PaginationProps";
 
-type BankPaginationProps = {
-  page: number;
-  totalPages: number;
-  totalElements: number;
-};
-
-export function BankPagination({
+export function Pagination({
   page,
   totalPages,
   totalElements,
-}: BankPaginationProps) {
+}: PaginationProps) {
   const [, setSearchParams] = useSearchParams();
 
   function updatePage(newPage: number) {
