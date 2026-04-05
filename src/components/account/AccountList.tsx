@@ -154,7 +154,7 @@ export function AccountList({
 
                     <Button
                       type="button"
-                      variant="destructive"
+                      variant="default"
                       size="sm"
                       onClick={() => onDelete?.(account)}
                     >
