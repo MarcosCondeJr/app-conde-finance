@@ -39,9 +39,20 @@ export function useAccount() {
   const { data, isLoading } = useQuery<AccountListResponse>({
     queryKey: ["get-accounts", filters],
     queryFn: async () => {
-      return AccountService.getAccounts(initialFilters);
+      return AccountService.getAccounts(filters);
     },
   });
+
+  function clearFilters() {
+    setSearchParams((params) => {
+      const next = new URLSearchParams(params);
+      next.delete("bankId");
+      next.delete("description");
+      next.delete("active");
+      next.set("page", "1");
+      return next;
+    });
+  }
 
   return {
     accounts: data?.content ?? [],
@@ -50,5 +61,6 @@ export function useAccount() {
     totalElements: data?.page.totalElements ?? 0,
     isLoading,
     filters,
+    clearFilters
   };
 }

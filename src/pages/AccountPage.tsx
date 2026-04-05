@@ -1,7 +1,9 @@
+import { AccountFiltersForm } from "@/components/account/AccountFiltersForm";
 import { AccountList } from "@/components/account/AccountList";
 import { Pagination } from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/useAccount";
+import { useBankOptions } from "@/hooks/useBankOptions";
 import type { Account } from "@/types/account/Account";
 import { Plus } from "lucide-react";
 import { useState } from "react";
@@ -21,8 +23,12 @@ export default function AccountPage() {
     isLoading,
     page,
     totalPages,
-    totalElements
+    totalElements,
+    filters,
+    clearFilters
   } = useAccount();
+
+  const { banksOptions } = useBankOptions();
 
   function handleOpenEdit(account: Account) {
     setSelectedAccount(account);
@@ -48,6 +54,12 @@ export default function AccountPage() {
           </Button>
         </div>
       </div>
+
+      <AccountFiltersForm
+        banks={banksOptions}
+        filters={filters}
+        onClear={clearFilters}
+      />
 
       <AccountList
         data={accounts}

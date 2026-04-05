@@ -9,8 +9,6 @@ import {
 import { Button } from "../ui/button";
 import type { Account } from "@/types/account/Account";
 import { Badge } from "../ui/badge";
-import { Skeleton } from "../ui/skeleton";
-import { Spinner } from "../ui/spinner";
 import { Building2 } from "lucide-react";
 import { AccountListSkeleton } from "./AccountListSkeleton";
 
@@ -52,7 +50,7 @@ export function AccountList({
             <AccountListSkeleton />
           ) : data.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center">
+              <TableCell colSpan={5} className="h-15 text-center">
                 Nenhuma conta encontrada.
               </TableCell>
             </TableRow>

@@ -24,7 +24,7 @@ export function AccountFiltersForm({
   filters,
   onClear,
 }: AccountFiltersProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   async function onChange(parameter: string, value: string | boolean) {
     setSearchParams((params) => {
