@@ -22,6 +22,10 @@ export const bankService = {
     return api.get(`/api/bank?${params.toString()}`).then((res) => res.data);
   },
 
+  async getBankOptions(): Promise<Bank[]> {
+    return api.get(`/api/bank/options`).then((res) => res.data);
+  },
+
   async saveBank(payload: BankRequest): Promise<Bank> {
     return api.post("/api/bank", payload).then((res) => res.data);
   },
