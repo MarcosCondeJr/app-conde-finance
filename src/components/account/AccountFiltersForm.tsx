@@ -1,5 +1,5 @@
-import type { BankFilters } from "@/types/bank/BankFilters";
-import { Button } from "../ui/button";
+import type { AccountFilters } from "@/types/account/AccountFilters";
+import { useSearchParams } from "react-router-dom";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -8,16 +8,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Button } from "../ui/button";
 import { Eraser } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import type { Bank } from "@/types/bank/Bank";
+import { BankSelect } from "../bank/BankSelect";
 
-type BankFiltersProps = {
-  filters: BankFilters;
+type AccountFiltersProps = {
+  banks: Bank[];
+  filters: AccountFilters;
   onClear: () => void;
 };
 
-export function BankFiltersForm({ filters, onClear }: BankFiltersProps) {
-  const [, setSearchParams] = useSearchParams();
+export function AccountFiltersForm({
+  banks,
+  filters,
+  onClear,
+}: AccountFiltersProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
 
   async function onChange(parameter: string, value: string | boolean) {
     setSearchParams((params) => {
@@ -29,23 +36,25 @@ export function BankFiltersForm({ filters, onClear }: BankFiltersProps) {
         next.set(parameter, String(value));
       }
 
-      next.set("page", "1"); 
+      next.set("page", "1");
       return next;
     });
   }
 
+  console.log(filters)
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      <Input
-        placeholder="Filtrar por código"
-        value={filters.code}
-        onChange={(e) => onChange("code", e.target.value)}
+      <BankSelect
+        banks={banks}
+        value={filters.bankId}
+        onChange={(value) => onChange("bankId", value)}
       />
 
       <Input
-        placeholder="Filtrar por nome"
-        value={filters.name}
-        onChange={(e) => onChange("name", e.target.value)}
+        placeholder="Filtrar por descrição"
+        value={filters.description}
+        onChange={(e) => onChange("description", e.target.value)}
       />
 
       <Select
@@ -58,9 +67,9 @@ export function BankFiltersForm({ filters, onClear }: BankFiltersProps) {
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
-            <SelectItem value="all">Todos</SelectItem>
-            <SelectItem value="true">Ativo</SelectItem>
-            <SelectItem value="false">Inativo</SelectItem>
+          <SelectItem value="all">Todos</SelectItem>
+          <SelectItem value="true">Ativo</SelectItem>
+          <SelectItem value="false">Inativo</SelectItem>
         </SelectContent>
       </Select>
 
