@@ -1,5 +1,6 @@
+import { Building2 } from "lucide-react";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Spinner } from "../ui/spinner";
 import {
   Table,
   TableBody,
@@ -9,6 +10,7 @@ import {
   TableRow,
 } from "../ui/table";
 import type { Bank } from "@/types/bank/Bank";
+import { BankListSkeleton } from "./BankListSkeleton";
 
 type BankTableProps = {
   data: Bank[];
@@ -16,6 +18,7 @@ type BankTableProps = {
   onEdit?: (bank: Bank) => void;
   onDelete?: (bank: Bank) => void;
 };
+
 export function BankList({
   data,
   isLoading,
@@ -23,21 +26,28 @@ export function BankList({
   onDelete,
 }: BankTableProps) {
   return (
-    <div className="rounded-xl border">
+    <div className="rounded-xl border bg-background">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>
-              <button type="button" className="flex items-center gap-1">
+            <TableHead className="w-[120px]">
+              <button
+                type="button"
+                className="flex items-center gap-1 font-medium text-foreground"
+              >
                 Código
               </button>
             </TableHead>
 
             <TableHead>
-              <button type="button" className="flex items-center gap-1">
+              <button
+                type="button"
+                className="flex items-center gap-1 font-medium text-foreground"
+              >
                 Nome
               </button>
             </TableHead>
+
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
@@ -45,23 +55,54 @@ export function BankList({
 
         <TableBody>
           {isLoading ? (
-            <TableRow>
-              <TableCell colSpan={4} className="flex items-center">
-                <Spinner />
-              </TableCell>
-            </TableRow>
+            <BankListSkeleton />
           ) : data.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center">
+              <TableCell colSpan={4} className="h-15 text-center text-muted-foreground">
                 Nenhum banco encontrado.
               </TableCell>
             </TableRow>
           ) : (
             data.map((bank) => (
-              <TableRow key={bank.id}>
-                <TableCell>{bank.code}</TableCell>
-                <TableCell>{bank.name}</TableCell>
-                <TableCell>{bank.active ? "Ativo" : "Inativo"}</TableCell>
+              <TableRow
+                key={bank.id}
+                className="transition-colors hover:bg-muted/40"
+              >
+                <TableCell>
+                  <span className="font-semibold text-foreground/90">
+                    {bank.code}
+                  </span>
+                </TableCell>
+
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted">
+                      <Building2 className="h-4 w-4 text-muted-foreground" />
+                    </div>
+
+                    <div className="flex flex-col">
+                      <span className="font-medium leading-none">
+                        {bank.name}
+                      </span>
+                    </div>
+                  </div>
+                </TableCell>
+
+                <TableCell>
+                  {bank.active ? (
+                    <Badge className="border border-green-200 bg-green-50 text-green-700 hover:bg-green-50">
+                      Ativo
+                    </Badge>
+                  ) : (
+                    <Badge
+                      variant="secondary"
+                      className="border border-zinc-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-100"
+                    >
+                      Inativo
+                    </Badge>
+                  )}
+                </TableCell>
+
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     <Button
@@ -75,7 +116,7 @@ export function BankList({
 
                     <Button
                       type="button"
-                      variant="default"
+                      variant="destructive"
                       size="sm"
                       onClick={() => onDelete?.(bank)}
                     >

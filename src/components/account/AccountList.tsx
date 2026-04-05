@@ -12,6 +12,7 @@ import { Badge } from "../ui/badge";
 import { Skeleton } from "../ui/skeleton";
 import { Spinner } from "../ui/spinner";
 import { Building2 } from "lucide-react";
+import { AccountListSkeleton } from "./AccountListSkeleton";
 
 type AccountTableProps = {
   data: Account[];
@@ -25,45 +26,6 @@ function formatCurrency(value: number) {
     style: "currency",
     currency: "BRL",
   }).format(value);
-}
-
-function AccountListSkeleton() {
-  return (
-    <>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <TableRow key={index}>
-          <TableCell>
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-9 w-9 rounded-lg" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-36" />
-                <Skeleton className="h-3 w-20" />
-              </div>
-            </div>
-          </TableCell>
-
-          <TableCell>
-            <Skeleton className="h-4 w-40" />
-          </TableCell>
-
-          <TableCell>
-            <Skeleton className="h-4 w-24" />
-          </TableCell>
-
-          <TableCell>
-            <Skeleton className="h-6 w-20 rounded-full" />
-          </TableCell>
-
-          <TableCell className="text-right">
-            <div className="flex justify-end gap-2">
-              <Skeleton className="h-9 w-20 rounded-md" />
-              <Skeleton className="h-9 w-20 rounded-md" />
-            </div>
-          </TableCell>
-        </TableRow>
-      ))}
-    </>
-  );
 }
 
 export function AccountList({
@@ -80,18 +42,14 @@ export function AccountList({
             <TableHead>Banco</TableHead>
             <TableHead>Descrição</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="text-right">Saldo</TableHead>
+            <TableHead>Saldo</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
           {isLoading ? (
-            <TableRow>
-              <TableCell colSpan={4} className="flex items-center">
-                <Spinner />
-              </TableCell>
-            </TableRow>
+            <AccountListSkeleton />
           ) : data.length === 0 ? (
             <TableRow>
               <TableCell colSpan={4} className="text-center">
@@ -118,21 +76,23 @@ export function AccountList({
                     </div>
                   </TableCell>
                 <TableCell>{account.description}</TableCell>
+
                 <TableCell>
                   {account.active ? (
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+                    <Badge className="border border-green-200 bg-green-50 text-green-700 hover:bg-green-50">
                       Ativo
                     </Badge>
                   ) : (
                     <Badge
                       variant="secondary"
-                      className="bg-gray-200 text-gray-600"
+                      className="border border-zinc-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-100"
                     >
                       Inativo
                     </Badge>
                   )}
                 </TableCell>
-                <TableCell className="text-right">
+
+                <TableCell>
                   <span
                     className={`font-medium ${
                       account.balance >= 0 ? "text-green-600" : "text-red-500"
