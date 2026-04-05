@@ -1,4 +1,5 @@
 import { AccountList } from "@/components/account/AccountList";
+import { Pagination } from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/useAccount";
 import type { Account } from "@/types/account/Account";
@@ -15,7 +16,13 @@ export default function AccountPage() {
   const [accountToDelete, setAccountToDelete] = useState<Account | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { accounts, isLoading } = useAccount();
+  const { 
+    accounts, 
+    isLoading,
+    page,
+    totalPages,
+    totalElements
+  } = useAccount();
 
   function handleOpenEdit(account: Account) {
     setSelectedAccount(account);
@@ -48,6 +55,14 @@ export default function AccountPage() {
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
       />
+
+      {accounts && (
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          totalElements={totalElements}
+        />
+      )}
     </div>
   );
 }

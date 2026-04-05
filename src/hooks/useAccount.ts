@@ -45,7 +45,7 @@ export function useAccount() {
 
   return {
     accounts: data?.content ?? [],
-    page: page,
+    page: pageParam,
     totalPages: data?.page.totalPages ?? 0,
     totalElements: data?.page.totalElements ?? 0,
     isLoading,

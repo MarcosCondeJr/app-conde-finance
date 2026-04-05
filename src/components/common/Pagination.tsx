@@ -85,11 +85,11 @@ export function Pagination({
         </span>
 
         <div className="space-x-1.5">
-          <Button size="icon" onClick={firstPage} disabled={page - 1 < 0}>
+          <Button size="icon" onClick={firstPage} disabled={page - 1 <= 0}>
             <ChevronsLeft className="size-4" />
             <span className="sr-only">Primeira página</span>
           </Button>
-          <Button size="icon" onClick={previousPage} disabled={page - 1 < 0}>
+          <Button size="icon" onClick={previousPage} disabled={page - 1 <= 0}>
             <ChevronLeft className="size-4" />
             <span className="sr-only">Anterior</span>
           </Button>
