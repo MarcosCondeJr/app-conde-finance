@@ -1,7 +1,8 @@
 import { AccountService } from "@/services/account.service";
 import type { AccountFilters } from "@/types/account/AccountFilters";
 import type { AccountListResponse } from "@/types/account/AccountListResponse";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import type { AccountRequest } from "@/types/account/AccountRequest";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 const initialFilters: AccountFilters = {
@@ -54,6 +55,48 @@ export function useAccount() {
     });
   }
 
+  const createAccount = useMutation({
+    mutationFn: async (payload: AccountRequest) => {
+      return await AccountService.saveAccount(payload);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["get-accounts"] });
+    },
+    onError: (error) => {
+      console.error("Erro ao cadastrar conta:", error);
+    },
+  });
+
+  const updateAccount = useMutation({
+    mutationFn: async ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: Partial<AccountRequest>;
+    }) => {
+      return await AccountService.updateAccount(id, payload);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["get-accounts"] });
+    },
+    onError: (error) => {
+      console.error("Erro ao editar a conta:", error);
+    },
+  });
+
+  const removeAccount = useMutation({
+    mutationFn: async (id: string) => {
+      return await AccountService.deleteAccount(id);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["get-accounts"] });
+    },
+    onError: (error) => {
+      console.error("Erro ao remover a conta:", error);
+    },
+  });
+
   return {
     accounts: data?.content ?? [],
     page: pageParam,
@@ -61,6 +104,9 @@ export function useAccount() {
     totalElements: data?.page.totalElements ?? 0,
     isLoading,
     filters,
-    clearFilters
+    clearFilters,
+    createAccount: createAccount.mutateAsync,
+    updateAccount: updateAccount.mutateAsync,
+    removeAccount: removeAccount.mutateAsync,
   };
 }

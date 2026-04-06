@@ -1,5 +1,5 @@
 export type AccountRequest = {
-    bankId: number,
-    description: string,
+    bankId: string,
+    description?: string,
     initialBalance: number
 }

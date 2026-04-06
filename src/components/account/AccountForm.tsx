@@ -5,8 +5,22 @@ import type { ApiError } from "@/types/api/ApiError";
 import { applyErrors } from "@/utils/applyErrors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
+import { Input } from "../ui/input";
+import { BankSelect } from "../bank/BankSelect";
 
 export default function AccountForm({
   open,
@@ -14,10 +28,11 @@ export default function AccountForm({
   account,
   onSave,
   onEdit,
+  banksOptions,
 }: AccountFormProps) {
   const defaultValues = useMemo<AccountRequest>(
     () => ({
-      bankId: Number(account?.bank.id) ?? "",
+      bankId: account?.bank.id ?? "",
       description: account?.description ?? "",
       initialBalance: account?.initialBalance ?? 0,
     }),
@@ -28,8 +43,9 @@ export default function AccountForm({
     handleSubmit,
     reset,
     setError,
+    register,
     control,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<AccountRequest>({
     resolver: zodResolver(accountSchema),
     defaultValues,
@@ -44,15 +60,15 @@ export default function AccountForm({
     try {
       if (account) {
         await onEdit(account.id, data);
-        toast.success("Banco atualizado com sucesso!");
+        toast.success("Conta atualizado com sucesso!");
         onOpenChange(false);
         return;
       }
       await onSave(data);
 
-      toast.success("Banco cadastrado com sucesso!");
+      toast.success("Conta cadastrado com sucesso!");
       onOpenChange(false);
-      reset({ bankId: undefined, description: "", initialBalance: 0 });
+      reset({ description: "", initialBalance: 0 });
     } catch (err) {
       applyErrors(err as ApiError, setError);
     }
@@ -62,9 +78,87 @@ export default function AccountForm({
     onOpenChange(nextOpen);
 
     if (!nextOpen && !account) {
-      reset({ bankId: undefined, description: "", initialBalance: 0 });
+      reset({ description: "", initialBalance: 0 });
     }
   };
 
-  
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-sm">
+        <DialogHeader>
+          <DialogTitle>
+            {account ? "Editar Conta" : "Cadastrar Conta"}
+          </DialogTitle>
+          <DialogDescription>
+            {account ? "Atualizar informações da conta" : "Crie uma nova conta"}
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <FieldGroup>
+            <Controller
+              name="bankId"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="bankId">Banco</FieldLabel>
+
+                  <BankSelect
+                    banks={banksOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Field>
+              <FieldLabel htmlFor="description">Descrição</FieldLabel>
+              <Input
+                {...register("description")}
+                id="description"
+                placeholder="Ex: Conta bancária principal"
+              />
+              {errors.description?.message && (
+                <FieldError errors={[errors.description?.message]} />
+              )}
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="initialBalance">Saldo inicial</FieldLabel>
+              <Input
+                type="number"
+                step="0.01"
+                {...register("initialBalance", { valueAsNumber: true })}
+                id="initialBalance"
+                placeholder="Ex: 200,00"
+              />
+              {errors.initialBalance?.message && (
+                <FieldError errors={[errors.initialBalance?.message]} />
+              )}
+            </Field>
+          </FieldGroup>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              {!isSubmitting ? (
+                <Button type="button" variant="outline" onClick={() => reset()}>
+                  Cancelar
+                </Button>
+              ) : (
+                ""
+              )}
+            </DialogClose>
+            <Button disabled={isSubmitting} type="submit">
+              {isSubmitting ? <Spinner /> : "Salvar"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
 }

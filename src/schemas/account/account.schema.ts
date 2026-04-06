@@ -2,11 +2,9 @@ import { z } from "zod";
 
 export const accountSchema = z.object({
   bankId: z
-    .string()
-    .trim()
-    .min(1, "O banco é obrigatório")
-    .regex(/^\d+$/, "O banco deve conter apenas números"),
-
+  .string()
+  .trim(),
+  
   description: z
     .string()
     .trim()
@@ -15,7 +13,6 @@ export const accountSchema = z.object({
     .optional(),
 
   initialBalance: z
-    .coerce
     .number()
     .min(0, "O saldo não pode ser negativo"),
 });

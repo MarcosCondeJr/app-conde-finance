@@ -1,10 +1,12 @@
 import { AccountFiltersForm } from "@/components/account/AccountFiltersForm";
+import AccountForm from "@/components/account/AccountForm";
 import { AccountList } from "@/components/account/AccountList";
 import { Pagination } from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/useAccount";
 import { useBankOptions } from "@/hooks/useBankOptions";
 import type { Account } from "@/types/account/Account";
+import type { AccountRequest } from "@/types/account/AccountRequest";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -25,13 +27,29 @@ export default function AccountPage() {
     totalPages,
     totalElements,
     filters,
-    clearFilters
+    clearFilters,
+    createAccount,
+    updateAccount,
+    removeAccount
   } = useAccount();
 
   const { banksOptions } = useBankOptions();
 
+  async function handleSubmit(payload: AccountRequest) {
+    await createAccount(payload);
+  }
+
+  async function handleEdit(id: string, payload: Partial<AccountRequest>) {
+    await updateAccount({id, payload});
+  }
+
   function handleOpenEdit(account: Account) {
     setSelectedAccount(account);
+    setOpenForm(true);
+  }
+
+  function handleOpenCreate() {
+    setSelectedAccount(undefined);
     setOpenForm(true);
   }
 
@@ -48,12 +66,21 @@ export default function AccountPage() {
           <p className="text-muted-foreground">Gerencie suas contas</p>
         </div>
         <div>
-          <Button>
+          <Button onClick={handleOpenCreate}>
             <Plus className="mr-2 h-4 w-4" />
             Adicionar Conta
           </Button>
         </div>
       </div>
+
+      <AccountForm 
+        open={openForm}
+        onOpenChange={setOpenForm}
+        account={selectedAccount}
+        onSave={handleSubmit}
+        onEdit={handleEdit}
+        banksOptions={banksOptions}
+      />
 
       <AccountFiltersForm
         banks={banksOptions}
