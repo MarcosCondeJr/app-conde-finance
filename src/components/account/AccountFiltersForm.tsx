@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { Eraser } from "lucide-react";
 import type { Bank } from "@/types/bank/Bank";
 import { BankSelect } from "../bank/BankSelect";
+import { ComboboxWithSearch } from "../ui/combo-box-with-search";
 
 type AccountFiltersProps = {
   banks: Bank[];
@@ -41,13 +42,18 @@ export function AccountFiltersForm({
     });
   }
 
-  console.log(filters)
+  console.log(filters);
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      <BankSelect
-        banks={banks}
+      <ComboboxWithSearch
+        items={banks}
         value={filters.bankId}
+        placeholder="Selecionar banco"
+        searchPlaceholder="Buscar banco..."
+        emptyMessage="Nenhum banco encontrado"
+        getValue={(bank) => bank.id}
+        getLabel={(bank) => bank.name}
         onChange={(value) => onChange("bankId", value)}
       />
 
