@@ -116,7 +116,7 @@ export function BankList({
 
                     <Button
                       type="button"
-                      variant="destructive"
+                      variant="default"
                       size="sm"
                       onClick={() => onDelete?.(bank)}
                     >
