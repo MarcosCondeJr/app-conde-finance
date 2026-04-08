@@ -4,7 +4,7 @@ import Login from "../pages/Login";
 import AuthLayout from "../components/layout/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import { Layout } from "../components/layout/Layout";
-import Dashboard from "../pages/Dashboard";
+import DashboardPage from "../pages/DashboardPage";
 import Categories from "../pages/Categories";
 import Transactions from "../pages/Transactions";
 import Register from "@/pages/Register";
@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
             {
                 element: <Layout />,
                 children: [
-                    { path: PATHS.home, element: <Dashboard /> },
+                    { path: PATHS.home, element: <DashboardPage /> },
                     { path: PATHS.banks, element: <BanksPage /> },
                     { path: PATHS.accounts, element: <AccountPage /> },
                     { path: PATHS.categories, element: <Categories /> },
