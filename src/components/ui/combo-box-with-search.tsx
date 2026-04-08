@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Search } from "lucide-react";
 import { Button } from "./button";
 import {
   Combobox,
@@ -34,8 +34,6 @@ export function ComboboxWithSearch<T>({
   onChange,
 }: ComboboxWithSearchProps<T>) {
   const selectedItem = items.find((item) => getValue(item) == value);
-
-  console.log(selectedItem);
 
   return (
     <Combobox
@@ -76,6 +74,7 @@ export function ComboboxWithSearch<T>({
           placeholder={searchPlaceholder}
           disabled={disabled}
         />
+
 
         <ComboboxEmpty>{emptyMessage}</ComboboxEmpty>
 
