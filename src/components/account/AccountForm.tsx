@@ -3,6 +3,7 @@ import type { AccountFormProps } from "@/types/account/AccountFormProps";
 import type { AccountRequest } from "@/types/account/AccountRequest";
 import type { ApiError } from "@/types/api/ApiError";
 import { applyErrors } from "@/utils/applyErrors";
+import { maskCurrencyBRL, unmaskCurrencyToDecimal } from "@/utils/masks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -32,9 +33,11 @@ export default function AccountForm({
 }: AccountFormProps) {
   const defaultValues = useMemo<AccountRequest>(
     () => ({
-      bankId: String(account?.bank.id) ?? "",
+      bankId: account?.bank.id ? String(account.bank.id) : "",
       description: account?.description ?? "",
-      initialBalance: String(account?.initialBalance) ?? "",
+      initialBalance: account?.initialBalance
+        ? String(account.initialBalance)
+        : "",
     }),
     [account],
   );
@@ -135,19 +138,32 @@ export default function AccountForm({
               )}
             </Field>
 
-            <Field>
-              <FieldLabel htmlFor="initialBalance">Saldo inicial</FieldLabel>
-              <Input
-                type="number"
-                step={"0.01"}
-                {...register("initialBalance")}
-                id="initialBalance"
-                placeholder="Ex: 200,00"
-              />
-              {errors.initialBalance?.message && (
-                <FieldError errors={[errors.initialBalance]} />
+            <Controller
+              name="initialBalance"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="initialBalance">Saldo inicial</FieldLabel>
+                  <Input
+                    id="initialBalance"
+                    type="text"
+                    inputMode="decimal"
+                    maxLength={24}
+                    autoComplete="off"
+                    placeholder="Ex: 200,00"
+                    value={maskCurrencyBRL(field.value ?? "")}
+                    onChange={(e) => {
+                      field.onChange(unmaskCurrencyToDecimal(e.target.value));
+                    }}
+                    onBlur={field.onBlur}
+                    ref={field.ref}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
               )}
-            </Field>
+            />
           </FieldGroup>
 
           <DialogFooter>

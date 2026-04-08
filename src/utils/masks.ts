@@ -17,3 +17,31 @@ export function maskCPF(value: string) {
 export function unmask(value: string) {
   return value.replace(/\D/g, "");
 }
+
+export function maskCurrencyBRL(value: string) {
+  const digits = unmask(value);
+
+  if (!digits) {
+    return "";
+  }
+
+  const integerPart = digits.slice(0, -2) || "0";
+  const decimalPart = digits.slice(-2).padStart(2, "0");
+  const formattedInteger = Number(integerPart).toLocaleString("pt-BR");
+
+  return `${formattedInteger},${decimalPart}`;
+}
+
+export function unmaskCurrencyToDecimal(value: string) {
+  const digits = unmask(value);
+
+  if (!digits) {
+    return "";
+  }
+
+  const padded = digits.padStart(3, "0");
+  const integerPart = padded.slice(0, -2).replace(/^0+(?=\d)/, "") || "0";
+  const decimalPart = padded.slice(-2);
+
+  return `${integerPart}.${decimalPart}`;
+}
