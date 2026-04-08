@@ -32,9 +32,9 @@ export default function AccountForm({
 }: AccountFormProps) {
   const defaultValues = useMemo<AccountRequest>(
     () => ({
-      bankId: account?.bank.id ?? "",
+      bankId: String(account?.bank.id) ?? "",
       description: account?.description ?? "",
-      initialBalance: account?.initialBalance ?? "",
+      initialBalance: String(account?.initialBalance) ?? "",
     }),
     [account],
   );
