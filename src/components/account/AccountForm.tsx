@@ -34,7 +34,7 @@ export default function AccountForm({
     () => ({
       bankId: account?.bank.id ?? "",
       description: account?.description ?? "",
-      initialBalance: account?.initialBalance ?? 0,
+      initialBalance: account?.initialBalance ?? "",
     }),
     [account],
   );
@@ -68,7 +68,7 @@ export default function AccountForm({
 
       toast.success("Conta cadastrado com sucesso!");
       onOpenChange(false);
-      reset({ description: "", initialBalance: 0 });
+      reset({ description: "", initialBalance: "" });
     } catch (err) {
       applyErrors(err as ApiError, setError);
     }
@@ -78,7 +78,7 @@ export default function AccountForm({
     onOpenChange(nextOpen);
 
     if (!nextOpen && !account) {
-      reset({ description: "", initialBalance: 0 });
+      reset({ description: "", initialBalance: "" });
     }
   };
 
@@ -110,7 +110,7 @@ export default function AccountForm({
                     placeholder="Selecionar banco"
                     searchPlaceholder="Buscar banco..."
                     emptyMessage="Nenhum banco encontrado"
-                    getValue={(bank) => bank.id}
+                    getValue={(bank) => String(bank.id)}
                     getLabel={(bank) => bank.name}
                     onChange={field.onChange}
                   />
@@ -128,9 +128,10 @@ export default function AccountForm({
                 {...register("description")}
                 id="description"
                 placeholder="Ex: Conta bancária principal"
+                required={false}
               />
               {errors.description?.message && (
-                <FieldError errors={[errors.description?.message]} />
+                <FieldError errors={[errors.description]} />
               )}
             </Field>
 
@@ -138,13 +139,13 @@ export default function AccountForm({
               <FieldLabel htmlFor="initialBalance">Saldo inicial</FieldLabel>
               <Input
                 type="number"
-                step="0.01"
-                {...register("initialBalance", { valueAsNumber: true })}
+                step={"0.01"}
+                {...register("initialBalance")}
                 id="initialBalance"
                 placeholder="Ex: 200,00"
               />
               {errors.initialBalance?.message && (
-                <FieldError errors={[errors.initialBalance?.message]} />
+                <FieldError errors={[errors.initialBalance]} />
               )}
             </Field>
           </FieldGroup>
@@ -168,3 +169,4 @@ export default function AccountForm({
     </Dialog>
   );
 }
+

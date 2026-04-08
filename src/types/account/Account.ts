@@ -2,9 +2,9 @@ import type { Bank } from "../bank/Bank";
 
 export interface Account {
   id: string;
-  description: string;
+  description?: string;
   bank: Bank;
-  initialBalance: number;
-  balance: number;
+  initialBalance: string;
+  balance: string;
   active: boolean;
 }
