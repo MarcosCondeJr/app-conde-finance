@@ -41,8 +41,6 @@ export function AccountFiltersForm({
     });
   }
 
-  console.log(filters);
-
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <SelectWithSearch

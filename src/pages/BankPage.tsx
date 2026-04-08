@@ -5,8 +5,10 @@ import DeleteConfirmDialog from "@/components/common/DeleteConfirmDialog";
 import { Pagination } from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
 import { useBank } from "@/hooks/useBank";
+import type { ApiError } from "@/types/api/ApiError";
 import type { Bank } from "@/types/bank/Bank";
 import type { BankRequest } from "@/types/bank/BankRequest";
+import { applyErrors } from "@/utils/applyErrors";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -65,7 +67,7 @@ export default function BanksPage() {
       setOpenDeleteDialog(false);
       setBankToDelete(null);
     } catch (error) {
-      toast.error("Erro ao excluir banco.");
+      applyErrors(error as ApiError);
     } finally {
       setIsDeleting(false);
     }

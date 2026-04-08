@@ -4,11 +4,11 @@ import { toast } from "sonner";
 
 export function applyErrors<TFieldValues extends FieldValues>(
   apiErr: ApiError,
-  setError: UseFormSetError<TFieldValues>,
+  setError?: UseFormSetError<TFieldValues>,
 ) {
   if (apiErr.fields?.length) {
     for (const f of apiErr.fields) {
-      setError(f.name as Path<TFieldValues>, { type: "server", message: f.message });
+      setError?.(f.name as Path<TFieldValues>, { type: "server", message: f.message });
     }
     return;
   }

@@ -62,7 +62,7 @@ export function useBank() {
       await queryClient.invalidateQueries({ queryKey: ["get-banks"] });
     },
     onError: (error) => {
-      console.log("Erro ao cadastrar banco:", error);
+      console.error("Erro ao cadastrar banco:", error);
     },
   });
 

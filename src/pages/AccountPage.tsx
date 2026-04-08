@@ -1,14 +1,18 @@
 import { AccountFiltersForm } from "@/components/account/AccountFiltersForm";
 import AccountForm from "@/components/account/AccountForm";
 import { AccountList } from "@/components/account/AccountList";
+import DeleteConfirmDialog from "@/components/common/DeleteConfirmDialog";
 import { Pagination } from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/useAccount";
 import { useBankOptions } from "@/hooks/useBankOptions";
 import type { Account } from "@/types/account/Account";
 import type { AccountRequest } from "@/types/account/AccountRequest";
+import type { ApiError } from "@/types/api/ApiError";
+import { applyErrors } from "@/utils/applyErrors";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function AccountPage() {
   const [openForm, setOpenForm] = useState(false);
@@ -20,8 +24,8 @@ export default function AccountPage() {
   const [accountToDelete, setAccountToDelete] = useState<Account | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { 
-    accounts, 
+  const {
+    accounts,
     isLoading,
     page,
     totalPages,
@@ -30,7 +34,7 @@ export default function AccountPage() {
     clearFilters,
     createAccount,
     updateAccount,
-    removeAccount
+    removeAccount,
   } = useAccount();
 
   const { banksOptions } = useBankOptions();
@@ -40,7 +44,7 @@ export default function AccountPage() {
   }
 
   async function handleEdit(id: string, payload: Partial<AccountRequest>) {
-    await updateAccount({id, payload});
+    await updateAccount({ id, payload });
   }
 
   function handleOpenEdit(account: Account) {
@@ -58,6 +62,22 @@ export default function AccountPage() {
     setOpenDeleteDialog(true);
   }
 
+  async function confirmDelete() {
+    if (!accountToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      await removeAccount(accountToDelete.id);
+      toast.success("Conta excluída com sucesso!");
+      setOpenDeleteDialog(false);
+      setAccountToDelete(null);
+    } catch (error) {
+      applyErrors(error as ApiError);
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -73,7 +93,7 @@ export default function AccountPage() {
         </div>
       </div>
 
-      <AccountForm 
+      <AccountForm
         open={openForm}
         onOpenChange={setOpenForm}
         account={selectedAccount}
@@ -102,6 +122,21 @@ export default function AccountPage() {
           totalElements={totalElements}
         />
       )}
+
+      <DeleteConfirmDialog
+        open={openDeleteDialog}
+        onOpenChange={(openDelete) => {
+          setOpenDeleteDialog(openDelete);
+
+          if (!openDelete) {
+            setAccountToDelete(null);
+          }
+        }}
+        onConfirm={confirmDelete}
+        title="Excluir conta"
+        itemName={accountToDelete?.description}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }
