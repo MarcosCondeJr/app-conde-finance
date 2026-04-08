@@ -20,7 +20,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { Input } from "../ui/input";
-import { BankSelect } from "../bank/BankSelect";
+import { SelectWithSearch } from "../common/SelectWithSearch";
 
 export default function AccountForm({
   open,
@@ -103,9 +103,15 @@ export default function AccountForm({
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="bankId">Banco</FieldLabel>
 
-                  <BankSelect
-                    banks={banksOptions}
+                  <SelectWithSearch
+                    items={banksOptions}
                     value={field.value}
+                    portalled={false}
+                    placeholder="Selecionar banco"
+                    searchPlaceholder="Buscar banco..."
+                    emptyMessage="Nenhum banco encontrado"
+                    getValue={(bank) => bank.id}
+                    getLabel={(bank) => bank.name}
                     onChange={field.onChange}
                   />
 
