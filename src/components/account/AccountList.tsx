@@ -26,6 +26,11 @@ function formatCurrency(value: number) {
   }).format(value);
 }
 
+function parseAmount(value: string) {
+  const parsedValue = Number(value);
+  return Number.isNaN(parsedValue) ? 0 : parsedValue;
+}
+
 export function AccountList({
   data,
   isLoading,
@@ -55,7 +60,10 @@ export function AccountList({
               </TableCell>
             </TableRow>
           ) : (
-            data.map((account) => (
+            data.map((account) => {
+              const balance = parseAmount(account.balance);
+
+              return (
               <TableRow key={account.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
@@ -93,10 +101,10 @@ export function AccountList({
                 <TableCell>
                   <span
                     className={`font-medium ${
-                      account.balance >= 0 ? "text-green-600" : "text-red-500"
+                      balance >= 0 ? "text-green-600" : "text-red-500"
                     }`}
                   >
-                    {formatCurrency(account.balance)}
+                    {formatCurrency(balance)}
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
@@ -121,7 +129,7 @@ export function AccountList({
                   </div>
                 </TableCell>
               </TableRow>
-            ))
+            )})
           )}
         </TableBody>
       </Table>

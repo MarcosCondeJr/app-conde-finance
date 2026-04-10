@@ -109,7 +109,6 @@ export default function AccountForm({
                   <SelectWithSearch
                     items={banksOptions}
                     value={field.value}
-                    portalled={false}
                     placeholder="Selecionar banco"
                     searchPlaceholder="Buscar banco..."
                     emptyMessage="Nenhum banco encontrado"
