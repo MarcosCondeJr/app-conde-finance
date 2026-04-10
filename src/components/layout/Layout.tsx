@@ -9,12 +9,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { PATHS } from "../../routes/paths";
-import {
-  Link,
-  Outlet,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -53,14 +48,19 @@ export function Layout() {
     navigate(PATHS.login, { replace: true });
   }
 
-  const selectedTheme = mounted ? theme ?? "system" : "system";
-  const activeTheme = mounted ? resolvedTheme ?? "light" : "light";
+  const selectedTheme = mounted ? (theme ?? "system") : "system";
+  const activeTheme = mounted ? (resolvedTheme ?? "light") : "light";
 
   return (
     <div className="min-h-screen max-w-screen">
       <aside className="fixed left-0 top-0 h-screen w-64 border-r flex flex-col">
         <div className="flex h-16 items-center justify-center border-b px-6 shrink-0">
-          <h2 className="text-xl font-bold text-primary">Conde Finance</h2>
+          <img
+            src="public\ICON-CONDE-FINANCE.png"
+            alt="Logo"
+            className="ml-2"
+            width={100}
+          />
         </div>
 
         <nav className="flex-1 space-y-1 flex flex-col gap-1 p-4 overflow-y-auto">
@@ -109,7 +109,7 @@ export function Layout() {
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" >
+            <DropdownMenuContent align="end">
               <DropdownMenuRadioGroup
                 // value={theme ?? "system"}
                 onValueChange={(value) =>

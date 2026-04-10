@@ -21,7 +21,10 @@ import { maskCPF, unmask } from "@/utils/masks";
 import { applyErrors } from "@/utils/applyErrors";
 import { toast } from "sonner";
 
-export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+export function LoginForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -41,9 +44,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
   async function onSubmit(data: LoginRequest) {
     try {
-      await login(data)
-      toast.success("Login efetuado com sucesso!")
-      navigate(PATHS.home, {replace: true});
+      await login(data);
+      toast.success("Login efetuado com sucesso!");
+      navigate(PATHS.home, { replace: true });
     } catch (err) {
       applyErrors(err as ApiError, setError);
     }
@@ -110,7 +113,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   placeholder="Informe sua senha"
                 />
                 {errors.password?.message && (
-                  <p className="text-xs text-red-500">{errors.password.message}</p>
+                  <p className="text-xs text-red-500">
+                    {errors.password.message}
+                  </p>
                 )}
                 {errors.root?.message && (
                   <p className="text-sm text-red-500">{errors.root.message}</p>
@@ -118,7 +123,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               </Field>
 
               <Field>
-                <Button type="submit" disabled={isSubmitting} className="w-full">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full"
+                >
                   {isSubmitting ? "Entrando..." : "Entrar"}
                 </Button>
               </Field>
@@ -129,8 +138,13 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             </FieldGroup>
           </form>
 
-          <div className="bg-primary flex items-center justify-center p-6 text-primary-foreground">
-            <div className="text-xl font-semibold">Conde Finance</div>
+          <div className="bg-primary flex items-center justify-center p-6">
+            <img
+              src="public\LOGO-CONDE-FINANCE-BRANCO.png"
+              alt="Logo"
+              className="ml-2"
+              width={"90%"}
+            />
           </div>
         </CardContent>
       </Card>
