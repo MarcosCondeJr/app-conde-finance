@@ -15,8 +15,6 @@ import { useState } from "react";
 type BankFilterSelectProps<T> = {
   items: T[];
   value: string;
-  disabled?: boolean;
-  portalled?: boolean;
   placeholder?: string;
   searchPlaceholder?: string;
   emptyMessage?: string;
@@ -28,8 +26,6 @@ type BankFilterSelectProps<T> = {
 export function SelectWithSearch<T>({
   items,
   value,
-  disabled = false,
-  portalled = true,
   placeholder = "Selecionar item",
   searchPlaceholder = "Buscar...",
   emptyMessage = "Nenhum item encontrado",
