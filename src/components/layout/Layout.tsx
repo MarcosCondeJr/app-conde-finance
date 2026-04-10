@@ -1,6 +1,7 @@
 import {
   Building2,
   LayoutDashboard,
+  Laptop,
   Moon,
   Receipt,
   Sun,
@@ -15,10 +16,18 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { NavUser } from "../NavUser";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "next-themes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const navItems = [
   { path: PATHS.home, label: "Dashboard", icon: LayoutDashboard },
@@ -28,16 +37,24 @@ const navItems = [
   { path: PATHS.transactions, label: "Transações", icon: Receipt },
 ];
 
-export function Layout({ children }: any) {
+export function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [theme, setTheme] = useState<String>("light");
   const { user, logout } = useAuth();
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   function onLogout() {
     logout();
     navigate(PATHS.login, { replace: true });
   }
+
+  const selectedTheme = mounted ? theme ?? "system" : "system";
+  const activeTheme = mounted ? resolvedTheme ?? "light" : "light";
 
   return (
     <div className="min-h-screen max-w-screen">
@@ -80,13 +97,40 @@ export function Layout({ children }: any) {
             {navItems.find((item) => item.path === location.pathname)?.label ||
               "Dashboard"}
           </div>
-          <Button variant="ghost" size="icon">
-            {theme === "dark" ? (
-              <Sun className="h-5 w-5 text-primary" />
-            ) : (
-              <Moon className="h-5 w-5 text-primary" />
-            )}
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Alterar tema">
+                {selectedTheme === "system" ? (
+                  <Laptop className="text-primary" />
+                ) : activeTheme === "dark" ? (
+                  <Moon className="text-primary" />
+                ) : (
+                  <Sun className="text-primary" />
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" >
+              <DropdownMenuRadioGroup
+                // value={theme ?? "system"}
+                onValueChange={(value) =>
+                  setTheme(value as "light" | "dark" | "system")
+                }
+              >
+                <DropdownMenuRadioItem value="light" className="text-end">
+                  <Sun className="text-primary" />
+                  Claro
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">
+                  <Moon className="text-primary" />
+                  Escuro
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="system">
+                  <Laptop className="text-primary" />
+                  Sistema
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </header>
 
         <main className="p-6">
