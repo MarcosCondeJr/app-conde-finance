@@ -1,4 +1,4 @@
-import { Building2 } from "lucide-react";
+import { Building2, MoreHorizontalIcon, Pen, PowerIcon, Trash2 } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
@@ -11,6 +11,14 @@ import {
 } from "../ui/table";
 import type { Bank } from "@/types/bank/Bank";
 import { BankListSkeleton } from "./BankListSkeleton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 type BankTableProps = {
   data: Bank[];
@@ -58,7 +66,10 @@ export function BankList({
             <BankListSkeleton />
           ) : data.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="h-15 text-center text-muted-foreground">
+              <TableCell
+                colSpan={4}
+                className="h-15 text-center text-muted-foreground"
+              >
                 Nenhum banco encontrado.
               </TableCell>
             </TableRow>
@@ -103,7 +114,7 @@ export function BankList({
                   )}
                 </TableCell>
 
-                <TableCell className="text-right">
+                {/* <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     <Button
                       type="button"
@@ -123,6 +134,35 @@ export function BankList({
                       Excluir
                     </Button>
                   </div>
+                </TableCell> */}
+
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="size-8">
+                        <MoreHorizontalIcon />
+                        <span className="sr-only">Open menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => onEdit?.(bank)}>
+                        <Pen />
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <PowerIcon />
+                        {bank.active ? "Desativar" : "Ativar"}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        variant="destructive"
+                        onClick={() => onDelete?.(bank)}
+                      >
+                        <Trash2 />
+                        Excluir
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))

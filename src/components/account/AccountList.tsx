@@ -9,8 +9,9 @@ import {
 import { Button } from "../ui/button";
 import type { Account } from "@/types/account/Account";
 import { Badge } from "../ui/badge";
-import { Building2 } from "lucide-react";
+import { Building2, MoreHorizontalIcon, Pen, PowerIcon, Trash2 } from "lucide-react";
 import { AccountListSkeleton } from "./AccountListSkeleton";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 type AccountTableProps = {
   data: Account[];
@@ -107,26 +108,34 @@ export function AccountList({
                     {formatCurrency(balance)}
                   </span>
                 </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onEdit?.(account)}
-                    >
-                      Editar
-                    </Button>
 
-                    <Button
-                      type="button"
-                      variant="default"
-                      size="sm"
-                      onClick={() => onDelete?.(account)}
-                    >
-                      Excluir
-                    </Button>
-                  </div>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="size-8">
+                        <MoreHorizontalIcon />
+                        <span className="sr-only">Open menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => onEdit?.(account)}>
+                        <Pen />
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <PowerIcon />
+                        {account.active ? "Desativar" : "Ativar"}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        variant="destructive"
+                        onClick={() => onDelete?.(account)}
+                      >
+                        <Trash2 />
+                        Excluir
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             )})
