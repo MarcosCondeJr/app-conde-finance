@@ -55,12 +55,21 @@ export function Layout() {
     <div className="min-h-screen max-w-screen">
       <aside className="fixed left-0 top-0 h-screen w-64 border-r flex flex-col">
         <div className="flex h-16 items-center justify-center border-b px-6 shrink-0">
-          <img
-            src="public\ICON-CONDE-FINANCE.png"
-            alt="Logo"
-            className="ml-2"
-            width={100}
-          />
+          {activeTheme === "dark" ? (
+            <img
+              src="public\LOGO-CONDE-FINANCE-VIOLETA.png"
+              alt="Logo"
+              className="ml-2"
+              width={80}
+            />
+          ) : (
+            <img
+              src="public\ICON-CONDE-FINANCE.png"
+              alt="Logo"
+              className="ml-2"
+              width={100}
+            />
+          )}
         </div>
 
         <nav className="flex-1 space-y-1 flex flex-col gap-1 p-4 overflow-y-auto">
