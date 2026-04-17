@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { ActiveBadge } from "../common/ActiveBadge";
 
 type BankTableProps = {
   data: Bank[];
@@ -100,41 +101,8 @@ export function BankList({
                 </TableCell>
 
                 <TableCell>
-                  {bank.active ? (
-                    <Badge className="border border-green-200 bg-green-50 text-green-700 hover:bg-green-50">
-                      Ativo
-                    </Badge>
-                  ) : (
-                    <Badge
-                      variant="secondary"
-                      className="border border-zinc-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-100"
-                    >
-                      Inativo
-                    </Badge>
-                  )}
+                  <ActiveBadge active={bank.active} />
                 </TableCell>
-
-                {/* <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onEdit?.(bank)}
-                    >
-                      Editar
-                    </Button>
-
-                    <Button
-                      type="button"
-                      variant="default"
-                      size="sm"
-                      onClick={() => onDelete?.(bank)}
-                    >
-                      Excluir
-                    </Button>
-                  </div>
-                </TableCell> */}
 
                 <TableCell className="text-right">
                   <DropdownMenu>

@@ -12,6 +12,7 @@ import { Badge } from "../ui/badge";
 import { Building2, MoreHorizontalIcon, Pen, PowerIcon, Trash2 } from "lucide-react";
 import { AccountListSkeleton } from "./AccountListSkeleton";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { ActiveBadge } from "../common/ActiveBadge";
 
 type AccountTableProps = {
   data: Account[];
@@ -85,18 +86,7 @@ export function AccountList({
                 <TableCell>{account.description}</TableCell>
 
                 <TableCell>
-                  {account.active ? (
-                    <Badge className="border border-green-200 bg-green-50 text-green-700 hover:bg-green-50">
-                      Ativo
-                    </Badge>
-                  ) : (
-                    <Badge
-                      variant="secondary"
-                      className="border border-zinc-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-100"
-                    >
-                      Inativo
-                    </Badge>
-                  )}
+                  <ActiveBadge active={account.active} />
                 </TableCell>
 
                 <TableCell>
