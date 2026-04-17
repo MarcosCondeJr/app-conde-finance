@@ -140,7 +140,7 @@ export function LoginForm({
 
           <div className="bg-primary flex items-center justify-center p-6">
             <img
-              src="public\LOGO-CONDE-FINANCE-BRANCO.png"
+              src="\LOGO-CONDE-FINANCE-BRANCO.png"
               alt="Logo"
               className="ml-2"
               width={"90%"}

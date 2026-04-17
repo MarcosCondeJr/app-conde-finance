@@ -10,6 +10,9 @@ export const api = axios.create({
   timeout: 15000,
 });
 
+const AUTH_ROUTES = new Set([PATHS.login, PATHS.register]);
+const AUTH_ENDPOINTS = ["/api/auth/login", "/api/auth/register"];
+
 function toApiError(err: unknown): ApiError {
   if (axios.isAxiosError(err)) {
     const e = err as AxiosError<any>;
@@ -26,6 +29,18 @@ function toApiError(err: unknown): ApiError {
   return { status: 0, title: "Erro inesperado", raw: err };
 }
 
+function shouldRedirectOnUnauthorized(err: AxiosError) {
+  const token = authStorage.getToken();
+  const requestUrl = err.config?.url ?? "";
+  const currentPath = window.location.pathname;
+  const isAuthRequest = AUTH_ENDPOINTS.some((endpoint) =>
+    requestUrl.includes(endpoint),
+  );
+  const isAuthScreen = AUTH_ROUTES.has(currentPath);
+
+  return Boolean(token) && !isAuthRequest && !isAuthScreen;
+}
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("access_token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -35,9 +50,13 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
+    if (
+      axios.isAxiosError(err) &&
+      err.response?.status === 401 &&
+      shouldRedirectOnUnauthorized(err)
+    ) {
       authStorage.clear();
-      window.location.href = PATHS.login;
+      window.location.replace(PATHS.login);
     }
 
     return Promise.reject(toApiError(err));

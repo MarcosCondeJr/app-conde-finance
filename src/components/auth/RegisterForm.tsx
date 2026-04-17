@@ -58,10 +58,15 @@ export function RegisterForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <div className="bg-primary flex items-center justify-center p-6 text-primary-foreground">
-            <div className="text-xl font-semibold">Conde Finance</div>
+          <div className="bg-primary flex items-center justify-center p-4">
+            <img
+              src="\LOGO-CONDE-FINANCE-BRANCO.png"
+              alt="Logo"
+              className="ml-2"
+              width={"90%"}
+            />
           </div>
-          <form onSubmit={handleSubmit(onResgister)} className="p-6 md:p-8">
+          <form onSubmit={handleSubmit(onResgister)} className="p-6">
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Crie sua conta</h1>
