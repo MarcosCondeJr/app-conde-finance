@@ -8,8 +8,8 @@ export const categoryService = {
   async getCategories(filters: CategoryFilters): Promise<CategoryListResponse> {
     const params = new URLSearchParams();
 
-    if (filters.description) {
-      params.append("description", filters.description);
+    if (filters.name) {
+      params.append("name", filters.name);
     }
 
     if (filters.categoryType) {

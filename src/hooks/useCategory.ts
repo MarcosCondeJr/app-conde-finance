@@ -11,7 +11,7 @@ import type { CategoryListResponse } from "@/types/category/CategoryListResponse
 import type { CategoryRequest } from "@/types/category/CategoryRequest";
 
 const initialFilters: CategoryFilters = {
-  description: "",
+  name: "",
   categoryType: "",
   active: "",
   page: 0,
@@ -29,7 +29,7 @@ export function useCategory() {
   const page = Math.max(pageParam - 1, 0);
 
   const size = Number(searchParams.get("size") || 10);
-  const categoryType = searchParams.get("categoryType") || "";
+  const name = searchParams.get("name") || "";
   const description = searchParams.get("description") || "";
   const active = searchParams.get("active") || "";
 
@@ -37,7 +37,7 @@ export function useCategory() {
     ...initialFilters,
     page,
     size,
-    categoryType,
+    name,
     description,
     active,
   };

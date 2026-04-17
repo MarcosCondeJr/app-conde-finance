@@ -2,7 +2,7 @@ import type { CategoryType } from "./CategoryType";
 
 export interface Category {
   id: string;
-  description: string;
+  name: string;
   categoryType: CategoryType
   active: boolean;
 }
