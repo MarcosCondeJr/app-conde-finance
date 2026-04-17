@@ -1,4 +1,5 @@
 import type { CategoryFilters } from "@/types/category/CategoryFilters";
+import { CategoryType } from "@/types/category/CategoryType";
 import { useSearchParams } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Button } from "../ui/button";
@@ -28,7 +29,6 @@ export function CategoryFiltersForm({ filters, onClear }: CategoryFiltersProps) 
     });
   }
 
-  console.log(filters);
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <Input
@@ -48,8 +48,8 @@ export function CategoryFiltersForm({ filters, onClear }: CategoryFiltersProps) 
         </SelectTrigger>
         <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
-            <SelectItem value="REVENUE">Receita</SelectItem>
-            <SelectItem value="EXPENSE">Despesa</SelectItem>
+            <SelectItem value={CategoryType.REVENUE}>Receita</SelectItem>
+            <SelectItem value={CategoryType.EXPENSE}>Despesa</SelectItem>
         </SelectContent>
       </Select>
 
