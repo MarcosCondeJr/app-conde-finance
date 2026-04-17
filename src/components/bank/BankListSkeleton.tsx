@@ -27,7 +27,6 @@ export function BankListSkeleton() {
           <TableCell className="text-right">
             <div className="flex justify-end gap-2">
               <Skeleton className="h-9 w-20 rounded-md" />
-              <Skeleton className="h-9 w-20 rounded-md" />
             </div>
           </TableCell>
         </TableRow>
