@@ -34,3 +34,4 @@ export const AccountService = {
     return api.delete(`/api/account/${id}`);
   }
 };
+// 

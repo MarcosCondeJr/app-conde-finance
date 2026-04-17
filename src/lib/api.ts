@@ -10,7 +10,7 @@ export const api = axios.create({
   timeout: 15000,
 });
 
-const AUTH_ROUTES = new Set([PATHS.login, PATHS.register]);
+const AUTH_ROUTES = new Set<string>([PATHS.login, PATHS.register]);
 const AUTH_ENDPOINTS = ["/api/auth/login", "/api/auth/register"];
 
 function toApiError(err: unknown): ApiError {
