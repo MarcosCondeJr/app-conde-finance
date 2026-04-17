@@ -1,5 +1,4 @@
 import { Building2, MoreHorizontalIcon, Pen, PowerIcon, Trash2 } from "lucide-react";
-import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
   Table,
@@ -18,7 +17,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import { ActiveBadge } from "../common/ActiveBadge";
 
 type BankTableProps = {
@@ -39,7 +37,7 @@ export function BankList({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[120px]">
+            <TableHead className="w-30">
               <button
                 type="button"
                 className="flex items-center gap-1 font-medium text-foreground"

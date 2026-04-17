@@ -8,7 +8,6 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import type { Account } from "@/types/account/Account";
-import { Badge } from "../ui/badge";
 import { Building2, MoreHorizontalIcon, Pen, PowerIcon, Trash2 } from "lucide-react";
 import { AccountListSkeleton } from "./AccountListSkeleton";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";

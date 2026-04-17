@@ -9,6 +9,7 @@ import { categoryService } from "@/services/category.service";
 import type { CategoryFilters } from "@/types/category/CategoryFilters";
 import type { CategoryListResponse } from "@/types/category/CategoryListResponse";
 import type { CategoryRequest } from "@/types/category/CategoryRequest";
+import type { CategoryType } from "@/types/category/CategoryType";
 
 const initialFilters: CategoryFilters = {
   name: "",
@@ -29,8 +30,8 @@ export function useCategory() {
 
   const size = Number(searchParams.get("size") || 10);
   const name = searchParams.get("name") || "";
-  const description = searchParams.get("description") || "";
-  const categoryType = searchParams.get("categoryType") || "";
+  const categoryType =
+    (searchParams.get("categoryType") as CategoryType | null) ?? "";
 
   const filters = {
     ...initialFilters,
@@ -38,7 +39,6 @@ export function useCategory() {
     size,
     name,
     categoryType,
-    description
   };
 
   const { data, isLoading } = useQuery<CategoryListResponse>({
