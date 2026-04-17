@@ -16,10 +16,6 @@ export const categoryService = {
       params.append("categoryType", filters.categoryType);
     }
 
-    if (filters.active !== "" && filters.active !== undefined) {
-      params.append("active", String(filters.active));
-    }
-
     params.append("page", String(filters.page));
     params.append("size", String(filters.size));
     params.append("sort", `${filters.sort},${filters.direction}`);

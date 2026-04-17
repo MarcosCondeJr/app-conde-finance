@@ -1,5 +1,6 @@
 import { CategoryFiltersForm } from "@/components/category/CategoryFiltersForm";
 import { CategoryList } from "@/components/category/CategoryList";
+import { Pagination } from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
 import { useCategory } from "@/hooks/useCategory";
 import type { Category } from "@/types/category/Category";
@@ -67,6 +68,14 @@ export default function CategoryPage() {
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
       />
+
+      {categories && (
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          totalElements={totalElements}
+        />
+      )}
     </div>
   );
 }

@@ -4,5 +4,4 @@ export interface Category {
   id: string;
   name: string;
   categoryType: CategoryType
-  active: boolean;
 }

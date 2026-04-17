@@ -13,7 +13,6 @@ import type { CategoryRequest } from "@/types/category/CategoryRequest";
 const initialFilters: CategoryFilters = {
   name: "",
   categoryType: "",
-  active: "",
   page: 0,
   size: 10,
   sort: "id",
@@ -31,15 +30,15 @@ export function useCategory() {
   const size = Number(searchParams.get("size") || 10);
   const name = searchParams.get("name") || "";
   const description = searchParams.get("description") || "";
-  const active = searchParams.get("active") || "";
+  const categoryType = searchParams.get("categoryType") || "";
 
   const filters = {
     ...initialFilters,
     page,
     size,
     name,
-    description,
-    active,
+    categoryType,
+    description
   };
 
   const { data, isLoading } = useQuery<CategoryListResponse>({
@@ -95,8 +94,8 @@ export function useCategory() {
   function clearFilters() {
     setSearchParams((params) => {
       const next = new URLSearchParams(params);
-      next.delete("description");
-      next.delete("active");
+      next.delete("categoryType");
+      next.delete("name");
       next.set("page", "1");
       return next;
     });
