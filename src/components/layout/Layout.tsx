@@ -57,7 +57,7 @@ export function Layout() {
         <div className="flex h-16 items-center justify-center border-b px-6 shrink-0">
           {activeTheme === "dark" ? (
             <img
-              src="public\LOGO-CONDE-FINANCE-VIOLETA.png"
+              src="/LOGO-CONDE-FINANCE-VIOLETA.png"
               alt="Logo"
               className="ml-2"
               width={80}
