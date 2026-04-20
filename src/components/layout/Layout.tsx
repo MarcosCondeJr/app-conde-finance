@@ -64,7 +64,7 @@ export function Layout() {
             />
           ) : (
             <img
-              src="public\ICON-CONDE-FINANCE.png"
+              src="ICON-CONDE-FINANCE.png"
               alt="Logo"
               className="ml-2"
               width={100}
