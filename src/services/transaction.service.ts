@@ -1,11 +1,11 @@
 import { api } from "@/lib/api";
-import type { CategoryListResponse } from "@/types/category/CategoryListResponse";
 import type { Transaction } from "@/types/transaction/Transaction";
 import type { TransactionFilters } from "@/types/transaction/TransactionFilters";
+import type { TransactionListResponse } from "@/types/transaction/TransactionListResponse";
 import type { TransactionRequest } from "@/types/transaction/TransactionRequest";
 
 export const TransactionService = {
-  async getTransactions(filters: TransactionFilters): Promise<CategoryListResponse> {
+  async getTransactions(filters: TransactionFilters): Promise<TransactionListResponse> {
     const params = new URLSearchParams();
 
     if (filters.categoryId) params.append("categoryId", filters.categoryId);
