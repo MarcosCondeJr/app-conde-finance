@@ -1,11 +1,12 @@
-import type { CategoryType } from "../category/CategoryType";
 import type { PaymentMethod } from "./paymentMethod";
+import type { TransactionType } from "./TransactionType";
 
 export type TransactionFilters = {
-  accountId: string;
   categoryId: string;
-  transactionDate: string;
-  categoryType: CategoryType | string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  transactionType: TransactionType | string;
   paymentMethod: PaymentMethod | string;
   page: number;
   size: number;

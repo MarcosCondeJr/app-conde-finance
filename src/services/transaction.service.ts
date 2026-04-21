@@ -8,12 +8,12 @@ export const TransactionService = {
   async getTransactions(filters: TransactionFilters): Promise<CategoryListResponse> {
     const params = new URLSearchParams();
 
-    // if (filters.code) params.append("code", filters.code);
-    // if (filters.name) params.append("name", filters.name);
-
-    // if (filters.active !== "" && filters.active !== undefined) {
-    //   params.append("active", String(filters.active));
-    // }
+    if (filters.categoryId) params.append("categoryId", filters.categoryId);
+    if (filters.startDate) params.append("startDate", filters.startDate);
+    if (filters.endDate) params.append("endDate", filters.endDate);
+    if (filters.description) params.append("description", filters.description);
+    if (filters.transactionType) params.append("transactionType", filters.transactionType);
+    if (filters.paymentMethod) params.append("paymentMethod", filters.paymentMethod);
 
     params.append("page", String(filters.page));
     params.append("size", String(filters.size));
