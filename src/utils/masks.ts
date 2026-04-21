@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import { ptBR } from 'date-fns/locale';
+
 export function maskCPF(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 11);
 
@@ -44,4 +47,19 @@ export function unmaskCurrencyToDecimal(value: string) {
   const decimalPart = padded.slice(-2);
 
   return `${integerPart}.${decimalPart}`;
+}
+
+export function formatDateBr(date: string) {
+  const dateFormat = format(new Date(date), "dd/MM/yyyy", {
+    locale: ptBR,
+  });
+
+  return dateFormat;
+}
+
+export function formatCurrency(value: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
 }
