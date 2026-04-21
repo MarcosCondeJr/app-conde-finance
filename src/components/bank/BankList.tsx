@@ -18,20 +18,14 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { ActiveBadge } from "../common/ActiveBadge";
-
-type BankTableProps = {
-  data: Bank[];
-  isLoading: boolean;
-  onEdit?: (bank: Bank) => void;
-  onDelete?: (bank: Bank) => void;
-};
+import type { TableProps } from "@/types/common/TableProps";
 
 export function BankList({
   data,
   isLoading,
   onEdit,
   onDelete,
-}: BankTableProps) {
+}: TableProps<Bank>) {
   return (
     <div className="rounded-xl border bg-background">
       <Table>

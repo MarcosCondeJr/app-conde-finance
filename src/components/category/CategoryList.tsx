@@ -12,20 +12,14 @@ import { MoreHorizontalIcon, Pen, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { CategoryTypeBadge } from "../common/CategoryTypeBadge";
-
-type CategoryTableProps = {
-  data: Category[];
-  isLoading: boolean;
-  onEdit?: (category: Category) => void;
-  onDelete?: (category: Category) => void;
-};
+import type { TableProps } from "@/types/common/TableProps";
 
 export function CategoryList({
   data,
   isLoading,
   onEdit,
   onDelete,
-}: CategoryTableProps) {
+}: TableProps<Category>) {
   return (
     <div className="rounded-xl border">
       <Table>

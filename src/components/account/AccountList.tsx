@@ -12,13 +12,7 @@ import { Building2, MoreHorizontalIcon, Pen, PowerIcon, Trash2 } from "lucide-re
 import { AccountListSkeleton } from "./AccountListSkeleton";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { ActiveBadge } from "../common/ActiveBadge";
-
-type AccountTableProps = {
-  data: Account[];
-  isLoading: boolean;
-  onEdit?: (account: Account) => void;
-  onDelete?: (account: Account) => void;
-};
+import type { TableProps } from "@/types/common/TableProps";
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("pt-BR", {
@@ -37,7 +31,7 @@ export function AccountList({
   isLoading,
   onEdit,
   onDelete,
-}: AccountTableProps) {
+}: TableProps<Account>) {
   return (
     <div className="rounded-xl border">
       <Table>
