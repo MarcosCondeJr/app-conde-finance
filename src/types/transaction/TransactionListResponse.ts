@@ -1,7 +1,7 @@
 import type { PageInfo } from "../pagination/PageInfo";
 import type { Transaction } from "./Transaction";
 
-export interface CategoryListResponse {
+export interface TransactionListResponse {
   content: Transaction[];
   page: PageInfo;
 }
