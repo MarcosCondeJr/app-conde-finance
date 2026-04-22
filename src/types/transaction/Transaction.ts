@@ -10,7 +10,7 @@ export interface Transaction {
     category: Category
     transactionDate: string,
     description: string,
-    transactionType: TransactionType,
-    paymentMethod: PaymentMethod,
+    transactionType: TransactionType | string,
+    paymentMethod: PaymentMethod | string,
     amount: string
 }
