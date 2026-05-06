@@ -20,6 +20,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import type { UserResponse } from "@/types/user/UserResponse"
+import ProfileModal from "./auth/ProfileModal"
+import { useState } from "react"
 
 export function NavUser({ user, logout }: {
   user: UserResponse | null
@@ -29,6 +31,8 @@ export function NavUser({ user, logout }: {
   if(!user){
     return;
   }
+
+  const [openModalProfile, setOpenModalProfile] = useState(false);
 
   return (
         <DropdownMenu>
@@ -42,8 +46,8 @@ export function NavUser({ user, logout }: {
                     hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
                 "
             >
-              <Avatar className="h-8 w-8 rounded-lg grayscale">
-                <AvatarImage src={user.avatar} alt={user.name} />
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src="https://github.com/shadcn.png" alt={user.name} />
                 <AvatarFallback className="rounded-lg">
                 {user.name
                     .split(" ")
@@ -72,7 +76,7 @@ export function NavUser({ user, logout }: {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src="https://github.com/shadcn.png" alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -85,7 +89,7 @@ export function NavUser({ user, logout }: {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenModalProfile(true)}>
                 <UserCircle />
                 Perfil
               </DropdownMenuItem>
@@ -96,6 +100,8 @@ export function NavUser({ user, logout }: {
               Sair
             </DropdownMenuItem>
           </DropdownMenuContent>
+
+          <ProfileModal user={user} open={openModalProfile} onClose={() => setOpenModalProfile(false)}/>
         </DropdownMenu>
   )
 }
