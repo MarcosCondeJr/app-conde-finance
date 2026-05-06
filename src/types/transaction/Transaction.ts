@@ -1,7 +1,7 @@
 
 import type { Account } from "../account/Account";
 import type { Category } from "../category/Category";
-import type { PaymentMethod } from "./paymentMethod";
+import type { PaymentMethod } from "./PaymentMethod";
 import type { TransactionType } from "./TransactionType";
 
 export interface Transaction {

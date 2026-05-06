@@ -1,4 +1,4 @@
-import type { PaymentMethod } from "./paymentMethod";
+import type { PaymentMethod } from "./PaymentMethod";
 import type { TransactionType } from "./TransactionType";
 
 export type TransactionFilters = {
