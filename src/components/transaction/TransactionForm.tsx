@@ -5,7 +5,11 @@ import type { TransactionFormProps } from "@/types/transaction/TransactionFormPr
 import type { TransactionRequest } from "@/types/transaction/TransactionRequest";
 import { TransactionType } from "@/types/transaction/TransactionType";
 import { applyErrors } from "@/utils/applyErrors";
-import { maskCurrencyBRL, unmaskCurrencyToDecimal } from "@/utils/masks";
+import {
+  maskCurrencyBRL,
+  normalizeDecimalCurrency,
+  unmaskCurrencyToDecimal,
+} from "@/utils/masks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -21,7 +25,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -51,7 +55,7 @@ export function TransactionForm({
       description: transaction?.description ?? "",
       transactionType: transaction?.transactionType ?? "",
       paymentMethod: transaction?.paymentMethod ?? "",
-      amount: transaction?.amount ? String(transaction.amount) : "",
+      amount: normalizeDecimalCurrency(transaction?.amount),
     }),
     [transaction],
   );
@@ -110,11 +114,6 @@ export function TransactionForm({
       resetCreateForm();
     }
   };
-
-  if (accountsOptions.length === 0 || categoriesOptions.length === 0)
-  {
-    // return
-  }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

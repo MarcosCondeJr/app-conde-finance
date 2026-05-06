@@ -3,7 +3,11 @@ import type { AccountFormProps } from "@/types/account/AccountFormProps";
 import type { AccountRequest } from "@/types/account/AccountRequest";
 import type { ApiError } from "@/types/api/ApiError";
 import { applyErrors } from "@/utils/applyErrors";
-import { maskCurrencyBRL, unmaskCurrencyToDecimal } from "@/utils/masks";
+import {
+  maskCurrencyBRL,
+  normalizeDecimalCurrency,
+  unmaskCurrencyToDecimal,
+} from "@/utils/masks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -35,9 +39,7 @@ export default function AccountForm({
     () => ({
       bankId: account?.bank.id ? String(account.bank.id) : "",
       description: account?.description ?? "",
-      initialBalance: account?.initialBalance
-        ? String(account.initialBalance)
-        : "",
+      initialBalance: normalizeDecimalCurrency(account?.initialBalance),
     }),
     [account],
   );

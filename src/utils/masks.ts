@@ -49,6 +49,21 @@ export function unmaskCurrencyToDecimal(value: string) {
   return `${integerPart}.${decimalPart}`;
 }
 
+export function normalizeDecimalCurrency(value?: string | number | null) {
+  if (value === undefined || value === null || value === "") {
+    return "";
+  }
+
+  const normalizedValue = String(value).replace(",", ".");
+  const parsedValue = Number(normalizedValue);
+
+  if (Number.isNaN(parsedValue)) {
+    return "";
+  }
+
+  return parsedValue.toFixed(2);
+}
+
 export function formatDateBr(date: string) {
   const dateFormat = format(new Date(date), "dd/MM/yyyy", {
     locale: ptBR,
