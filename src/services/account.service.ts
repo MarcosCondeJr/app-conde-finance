@@ -32,6 +32,9 @@ export const AccountService = {
 
   async deleteAccount(id: string): Promise<void> {
     return api.delete(`/api/account/${id}`);
+  },
+
+  async getAccountOptions(): Promise<Account[]> {
+    return api.get(`/api/account/options`).then((res) => res.data);;
   }
 };
-// 

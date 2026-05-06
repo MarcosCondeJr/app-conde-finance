@@ -111,6 +111,11 @@ export function TransactionForm({
     }
   };
 
+  if (accountsOptions.length === 0 || categoriesOptions.length === 0)
+  {
+    // return
+  }
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-4xl">
@@ -133,6 +138,7 @@ export function TransactionForm({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="accountId">Conta</FieldLabel>
+
                   <SelectWithSearch
                     items={accountsOptions}
                     value={field.value}
@@ -140,11 +146,12 @@ export function TransactionForm({
                     searchPlaceholder="Buscar conta..."
                     emptyMessage="Nenhuma conta encontrada"
                     getValue={(account) => String(account.id)}
-                    getLabel={(account) =>
-                      account.description || account.bank.name
+                    getLabel={(account) => 
+                      account.bank.name + " - " + account.description
                     }
                     onChange={field.onChange}
                   />
+
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}

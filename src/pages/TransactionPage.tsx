@@ -3,6 +3,8 @@ import { Pagination } from "@/components/common/Pagination";
 import { TransactionForm } from "@/components/transaction/TransactionForm";
 import { TransactionList } from "@/components/transaction/TransactionList";
 import { Button } from "@/components/ui/button";
+import { useAccountOptions } from "@/hooks/useAccountOptions";
+import { useCategoryOptions } from "@/hooks/useCategoryOptions";
 import { useTransaction } from "@/hooks/useTransaction";
 import type { ApiError } from "@/types/api/ApiError";
 import type { Transaction } from "@/types/transaction/Transaction";
@@ -33,6 +35,9 @@ export default function TransactionPage() {
     updateTransaction,
     removeTransaction,
   } = useTransaction();
+
+  const { accountsOptions } = useAccountOptions();
+  const { categoriesOptions } = useCategoryOptions();
 
   async function handleSubmit(payload: TransactionRequest) {
     await createTransaction(payload);
@@ -94,6 +99,8 @@ export default function TransactionPage() {
         transaction={selectedTransaction}
         onSave={handleSubmit}
         onEdit={handleEdit}
+        accountsOptions={accountsOptions}
+        categoriesOptions={categoriesOptions}
       />
 
       <TransactionList

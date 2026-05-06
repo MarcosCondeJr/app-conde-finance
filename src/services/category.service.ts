@@ -37,4 +37,8 @@ export const categoryService = {
   async deleteCategory(id: string): Promise<void> {
     await api.delete(`/api/category/${id}`);
   },
+
+  async getCategoriesOptions(): Promise<Category[]> {
+    return api.get('/api/category/options').then((res) => res.data);
+  }
 };
