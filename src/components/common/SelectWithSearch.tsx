@@ -18,6 +18,7 @@ type BankFilterSelectProps<T> = {
   placeholder?: string;
   searchPlaceholder?: string;
   emptyMessage?: string;
+  disable?: boolean;
   getValue: (item: T) => string;
   getLabel: (item: T) => string;
   onChange: (value: string) => void;
@@ -29,6 +30,7 @@ export function SelectWithSearch<T>({
   placeholder = "Selecionar item",
   searchPlaceholder = "Buscar...",
   emptyMessage = "Nenhum item encontrado",
+  disable = false,
   getValue,
   getLabel,
   onChange,
@@ -38,7 +40,7 @@ export function SelectWithSearch<T>({
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal={true}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild disabled={disable}>
         <Button
           variant="outline"
           role="combobox"
@@ -60,7 +62,7 @@ export function SelectWithSearch<T>({
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
 
-          <CommandList className="max-h-64 overflow-y-auto">
+          <CommandList className="max-h-64 overflow-y-auto" >
             <CommandEmpty>{emptyMessage}</CommandEmpty>
 
             <CommandGroup>

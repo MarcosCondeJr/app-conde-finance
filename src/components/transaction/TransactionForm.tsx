@@ -149,6 +149,7 @@ export function TransactionForm({
                       account.bank.name + " - " + account.description
                     }
                     onChange={field.onChange}
+                    disable={transaction ? true : false}
                   />
 
                   {fieldState.invalid && (
