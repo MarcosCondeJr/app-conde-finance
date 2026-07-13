@@ -73,25 +73,28 @@ export function Layout() {
         </div>
 
         <nav className="flex-1 space-y-1 flex flex-col gap-1 p-4 overflow-y-auto">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+          {navItems
+            .filter((item) => !(user?.role == "USER" && item.path == PATHS.banks))
+            .map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
 
-            return (
-              <Link key={item.path} to={item.path}>
-                <div
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                  )}
-                >
-                  <Icon className="h-5 w-5" />
-                  <span>{item.label}</span>
-                </div>
-              </Link>
-            );
+              return (
+                <Link key={item.path} to={item.path}>
+                  
+                  <div
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
+                      isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    )}
+                  >
+                    <Icon className="h-5 w-5" />
+                    <span>{item.label}</span>
+                  </div>
+                </Link>
+              );
           })}
         </nav>
 
